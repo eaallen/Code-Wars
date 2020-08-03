@@ -7,6 +7,18 @@
 </head>
 <body>
     <script src="./index.js"></script>
-    <button onclick="handle_click()">test</button>
+    <script>
+        let tog = new Toggle()
+
+        function handle_click(){
+            console.log(tog.toggle())
+            if(tog.val()){
+                document.getElementById('x').style.margin = "100px"  
+            }else{
+                document.getElementById('x').style.margin = "0"  
+            }
+        }
+    </script>
+    <button id='x' onclick="handle_click()">test</button>
 </body>
 </html>

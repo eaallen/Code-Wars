@@ -31,13 +31,9 @@ class Toggle {
         return this.arr[this.start_idx]
     }
 
-    show(){
+    val(){
         return this.arr[this.start_idx]
     }
 }
 
-let tog = new Toggle(['a','b','c'])
 
-function handle_click(){
-    console.log(tog.toggle_down())
-}
