@@ -31,34 +31,84 @@ function num_convert(number_str){
     }    
 }
 
-function read (number_str){
-    let number_arr = ['zero','one','two','three','four','five','six','seven','eight','nine','ten',]
-    let tens_arr =   ['zero90saew','ten','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety',]
+function parseInt (number_str){
+    if(number_str === 'one million'){return 1000000}
+    if(number_str === 'zero'){return 0}
+
+    number_str = number_str.replace(/^\s(and \s)$/g, '') // get rid of and
+
+    // set up for conversion 
+    let number_arr = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen']
+    let tens_arr =   ['placeholder 0','placeholder 1','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety',]
+
+    // make the string an array
     let num = number_str.split(' ').reverse()
+    console.log(number_str.split(' '),"<--")
     console.log(num)
+
     let new_num = []
+
+    // yes, a good ol for loop
     for(let i = 0; i<num.length; i++){
         if(number_arr.indexOf(num[i])!==-1){
-            new_num.unshift(number_arr.indexOf(num[i]).toString())
+            let created_num = number_arr.indexOf(num[i]).toString()
+            if(created_num.length >1){
+                created_num = created_num.split('')
+                created_num.reverse().map(x=>new_num.unshift(x))
+            }else new_num.unshift(created_num)
         }
+
         if(tens_arr.indexOf(num[i])!==-1){
             new_num.unshift(tens_arr.indexOf(num[i]).toString()+'0')
         }
+
         if(number_arr.indexOf(num[i])===-1 && number_arr.indexOf(num[i-1])===-1){
             // new_num+="00"
         }
+
         if(num[i].includes('-')){
             let arr= num[i].split('-')
-            
-            new_num.unshift(tens_arr.indexOf(arr[0]).toString()+number_arr.indexOf(arr[1]).toString())
-         
+            new_num.unshift(number_arr.indexOf(arr[1]).toString())
+            new_num.unshift(tens_arr.indexOf(arr[0]).toString())
         }
+
+        if(num[i]==='hundred'){
+            switch (new_num.length) {
+                case 0:
+                case 3:
+                    new_num.unshift('0')
+                    new_num.unshift('0')
+                    break;
+                case 1:
+                case 4:
+                    new_num.unshift('0')
+                    break
+              
+            }
+         } 
+        if(num[i]==='thousand'){
+            switch (new_num.length) {
+                case 0:
+                    new_num.unshift('0')
+                    new_num.unshift('0')
+                    new_num.unshift('0')
+                    break;
+                case 1:
+                    new_num.unshift('0')
+                    new_num.unshift('0')
+                    break
+                 case 2:
+                     new_num.unshift('0')
+                     break
+                 
+            }
+         } 
     } 
-    return new_num.join('')
+    return Number(new_num.join(''))
 }
 
 
-console.log(read('twenty-one forty-eight ninety-nine'))
+console.log(parseInt('sixty-eight thousand nine hundred and ninety-eight'))
 
 
 //'0''0''0''0'1'0'1'0'.'0''0''0''0''0''0''0''0'.'0''0''0''0''0''0''0''0'.'0''0''0''0''0''0''0'1
