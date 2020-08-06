@@ -18,91 +18,126 @@ All tested numbers are valid, you don't need to validate them
 *********************************************************/
 
 function num_convert(number_str){
+    number_str = number_str.toLowercase()
+    if(number_str === 'one million'){return '1,000,000'}
+    if(number_str === 'zero'){return '0'}
+    
     let num_arr = number_str.split(' ')
     let new_num = ''
     for(const item of num_arr){
 
-        switch(item){
-            case 'zero':
-                new_num+='0'
-                break;
-            case 'one':
-                new_num+='1'
-                break;
-            case 'two':
-            case 'twenty':
-                new_num+='2'
-                break;
-            case 'three':
-            case 'thirty':
-                new_num+='3'
-                break;
-            case 'four':
-            case 'forty':
-                new_num+='4'
-                break;
-            case 'five':
-            case 'fifty':
-                new_num+='5'
-                break;
-            case 'six':
-            case 'sixty':
-                new_num+='6'
-                break;
-            case 'seven':
-            case 'seventy':
-                new_num+='7'
-                break;
-            case 'eight':
-            case 'eighty':
-                new_num+='8'
-                break;
-            case 'nine':
-            case 'ninety':
-                new_num+='9'
-                break;
-            case 'ten':
-                new_num+='10'
-                break;
-            case 'eleven':
-                new_num+='11'
-                break;
-            case 'twelve':
-                new_num+='12'
-                break;
-            case 'thirteen':
-                new_num+='13'
-                break;
-            case 'fourteen':
-                new_num+='14'
-                break;
-            case 'fifteen':
-                new_num+='15'
-                break;
-            case 'sixteen':
-                new_num+='16'
-                break;
-            case 'seventeen':
-                new_num+='17'
-                break;
-            case 'eighteen':
-                new_num+='18'
-                break;
-            case 'nineteen':
-                new_num+='19'
-                break;
-        }
+       new_num += _switch(item)
 
-
-    }
-    console.log(new_num)
-
-
-
-    
+    }    
 }
 
-num_convert('three four five')
+function read (number_str){
+    let number_arr = ['zero','one','two','three','four','five','six','seven','eight','nine','ten',]
+    let tens_arr =   ['zero90saew','ten','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety',]
+    let num = number_str.split(' ').reverse()
+    console.log(num)
+    let new_num = []
+    for(let i = 0; i<num.length; i++){
+        if(number_arr.indexOf(num[i])!==-1){
+            new_num.unshift(number_arr.indexOf(num[i]).toString())
+        }
+        if(tens_arr.indexOf(num[i])!==-1){
+            new_num.unshift(tens_arr.indexOf(num[i]).toString()+'0')
+        }
+        if(number_arr.indexOf(num[i])===-1 && number_arr.indexOf(num[i-1])===-1){
+            // new_num+="00"
+        }
+        if(num[i].includes('-')){
+            let arr= num[i].split('-')
+            
+            new_num.unshift(tens_arr.indexOf(arr[0]).toString()+number_arr.indexOf(arr[1]).toString())
+         
+        }
+    } 
+    return new_num.join('')
+}
+
+
+console.log(read('twenty-one forty-eight ninety-nine'))
 
 
 //'0''0''0''0'1'0'1'0'.'0''0''0''0''0''0''0''0'.'0''0''0''0''0''0''0''0'.'0''0''0''0''0''0''0'1
+
+function _switch(item){
+    switch(item){
+        case 'zero':
+            return '0'
+            
+        case 'one':
+            return '1'
+            
+        case 'two':
+        case 'twenty':
+            return '2'
+            
+        case 'three':
+        case 'thirty':
+            return '3'
+            
+        case 'four':
+        case 'forty':
+            return '4'
+            
+        case 'five':
+        case 'fifty':
+            return '5'
+            
+        case 'six':
+        case 'sixty':
+            return '6'
+            
+        case 'seven':
+        case 'seventy':
+            return '7'
+            
+        case 'eight':
+        case 'eighty':
+            return '8'
+            
+        case 'nine':
+        case 'ninety':
+            return '9'
+            
+        case 'ten':
+            return '10'
+            
+        case 'eleven':
+            return '11'
+            
+        case 'twelve':
+            return '12'
+            
+        case 'thirteen':
+            return '13'
+            
+        case 'fourteen':
+            return '14'
+            
+        case 'fifteen':
+            return '15'
+            
+        case 'sixteen':
+            return '16'
+            
+        case 'seventeen':
+            return '17'
+            
+        case 'eighteen':
+            return '18'
+            
+        case 'nineteen':
+            return '19'
+            
+    }
+    
+}
+
+function get_zero(){
+    return '0'
+}
+

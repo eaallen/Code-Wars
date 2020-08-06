@@ -3,7 +3,7 @@
  **********************************************************/
 
 function createPhoneNumber(numbers){
-    let str = numbers.join('').toString()
+    let str = numbers.join('')
     let match_arr = str.match(/^(\d{3})(\d{3})(\d{4})$/)
     return `(${match_arr[1]}) ${match_arr[2]}-${match_arr[3]}`
 }
