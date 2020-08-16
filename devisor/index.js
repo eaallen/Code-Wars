@@ -1,14 +1,14 @@
-function evenChars(string) {
-    if(string.length <= 2 || string.length > 100){
-        return "invalid string"
+function divisors(integer) {
+    let arr =[]
+    for(let i=2; i<integer; i++){
+        if(integer%i===0){
+            arr.push(i)
+        }
     }
-    let arr = string.split("")
-    let new_arr = []
-    console.log(arr)
-    for(let i=1; i<arr.length; i+=2){
-        new_arr.push(arr[i])
+    if(arr.length === 0){
+        document.getElementById('output').innerHTML = integer.toString() + " is prime"
+        return integer.toString() + " is prime"
     }
-    return new_arr
-}
-
-console.log(evenChars("Hello"))
+    document.getElementById('output').innerHTML = arr
+    return arr
+};
