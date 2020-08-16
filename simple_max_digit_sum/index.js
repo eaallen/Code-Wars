@@ -12,4 +12,4 @@ function solve(n){
 
 console.log(solve(48))
 
-console.log(Array(48));
+console.log(Array.from(Array(480+1), (x,i) => i));
