@@ -21,13 +21,10 @@ function create_same_length(str1,str2){
 function add_together(a,b){
     a.reverse()
     b.reverse()
-    // console.log("A,B__>",a,b)
     let ans = ""
     let carry =""
     for(let i=0; i<a.length; i++){
-        // console.log("a[i]",a[i],"b[i]",b[i])
         let num = (+a[i] + +b[i] + +carry).toString()
-        // console.log("num",num)
         if(num.length>1){
             carry=num[0]
             ans = num[1] + ans
@@ -36,7 +33,6 @@ function add_together(a,b){
             ans = num + ans
             
         }
-        // console.log(ans)
     }
     ans= carry + ans
     return ans
