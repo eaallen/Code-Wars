@@ -1,11 +1,5 @@
 
 console.log(add( "1372","69"))
-// console.log(add('23', '1'))
-
-// 00063829983432984289347293874
-//+90938498237058927340892374089
-//------------------------------
-// 91002328220491911630239667963
 
 function create_same_length(str1,str2){
     let long = str1.length>=str2.length? str1 : str2
@@ -31,7 +25,6 @@ function add_together(a,b){
         }else{
             carry = ""
             ans = num + ans
-            
         }
     }
     ans= carry + ans
