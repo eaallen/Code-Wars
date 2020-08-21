@@ -1,3 +1,17 @@
+window.onload = build_ui
+function build_ui(){
+    let input = document.createElement('input')
+    let btn = document.createElement("button")
+    btn.innerHTML = "submit"
+    let div = document.createElement('div')
+    div.appendChild(input)
+    div.appendChild(btn)
+    div.style.position = "absolute";
+    div.style.right = "5%"
+    div.style.bottom = "5%"
+    document.getElementsByTagName('body')[0].appendChild(div)
+}
+
 function fire(str){
     axios.get('https://api.wit.ai/message',{
         headers:{'Authorization': 'Bearer NDE5TQ3JWRA327RQF2USO4TIQ7SW234B'},
