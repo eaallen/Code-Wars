@@ -1,4 +1,4 @@
-window.onload = build_ui
+// window.onload = build_ui
 function build_ui(){
     let input = document.createElement('input')
     let btn = document.createElement("button")
