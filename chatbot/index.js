@@ -1,14 +1,29 @@
 // window.onload = build_ui
+window.onload = build_ui
 function build_ui(){
     let input = document.createElement('input')
     let btn = document.createElement("button")
+    let title = document.createElement('div')
+    let output = document.createElement('div')
+    let br = document.createElement('br')
+    input.id = "bot_input"
+
+    title.id = "bot_title"
+    title.innerHTML = "Assistant"
+    // --------------------------------BTN----------------------------------
+    btn.id = "bot_btn"
     btn.innerHTML = "submit"
+    btn.onclick = fire
+
+    output.id="bot_output"
+
     let div = document.createElement('div')
+    div.id="bot"
+    div.appendChild(title)
+    div.appendChild(output)
     div.appendChild(input)
+    div.appendChild(br)
     div.appendChild(btn)
-    div.style.position = "absolute";
-    div.style.right = "5%"
-    div.style.bottom = "5%"
     document.getElementsByTagName('body')[0].appendChild(div)
 }
 
@@ -17,7 +32,7 @@ function fire(str){
         headers:{'Authorization': 'Bearer NDE5TQ3JWRA327RQF2USO4TIQ7SW234B'},
         params:{
             'v': '20200819',
-            'q': str,
+            'q': document.getElementById("bot_input").value,
         }
     }).then(handle_data).catch(err=>document.getElementById('output').innerHTML = err)
     // document.getElementById('output').innerHTML = ""
@@ -27,7 +42,7 @@ function handle_data(resp){
     console.log(resp)
     let intent = resp.data.intents[0].name
     let entities = resp.data.entities
-    document.getElementById('output').innerHTML = intent + " : " + resp.data.intents[0].confidence
+    document.getElementById('bot_output').innerHTML = intent + " : " + resp.data.intents[0].confidence
     console.log("DATA----->",show_bot_action(intent, {...entities}))
 }
 

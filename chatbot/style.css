@@ -1,0 +1,38 @@
+#bot{
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+    background-color: #c4b7a6;
+    padding: 10px 2rem;
+    border-radius: 10px;
+}
+
+#bot_btn{
+    background-color: #b9936c;
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius: 20px;
+    position: relative;
+    left: 60px
+}
+
+#bot_output{
+    height: 100px;
+    width: 100%;
+    background-color: #e6e2d3;
+    border-radius: 10px;
+    overflow: scroll;
+}
+
+#bot_input{
+    border: 2px solid #e6e2d3;
+    /* border-radius: 10px; */
+    margin-top: 10px;
+    width: 100%;
+}
