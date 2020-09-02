@@ -28,21 +28,30 @@ function build_ui(){
 }
 
 function fire(str){
-    axios.get('https://api.wit.ai/message',{
-        headers:{'Authorization': 'Bearer NDE5TQ3JWRA327RQF2USO4TIQ7SW234B'},
+    // http://localhost:5001/heraresult/us-central1/hera?data=about
+    // axios.get('https://api.wit.ai/message',{
+    //     headers:{'Authorization': 'Bearer NDE5TQ3JWRA327RQF2USO4TIQ7SW234B'},
+    //     params:{
+    //         'v': '20200819',
+    //         'q': document.getElementById("bot_input").value,
+    //     }
+    // }).then(handle_data).catch(err=>document.getElementById('output').innerHTML = err)
+    document.getElementById('output').innerHTML = ""
+    axios.get('http://localhost:5001/heraresult/us-central1/hera',{
+        // headers:{'Authorization': 'Bearer NDE5TQ3JWRA327RQF2USO4TIQ7SW234B'},
         params:{
-            'v': '20200819',
-            'q': document.getElementById("bot_input").value,
+            // 'v': '20200819',
+            'data': document.getElementById("bot_input").value,
         }
     }).then(handle_data).catch(err=>document.getElementById('output').innerHTML = err)
-    // document.getElementById('output').innerHTML = ""
+
 
 }
 function handle_data(resp){
     console.log(resp)
-    let intent = resp.data.intents[0].name
-    let entities = resp.data.entities
-    document.getElementById('bot_output').innerHTML = intent + " : " + resp.data.intents[0].confidence
+    let intent = resp.data.data.intents[0].name
+    let entities = resp.data.data.entities
+    document.getElementById('bot_output').innerHTML = intent + " : " + resp.data.data.intents[0].confidence
     console.log("DATA----->",show_bot_action(intent, {...entities}))
 }
 
