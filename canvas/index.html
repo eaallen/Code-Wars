@@ -12,10 +12,10 @@
 </head>
 <body>
     <div class="container">
-        <div class="display-4 text-center">Loading Bar</div>
-        <div>
-            <canvas id='canvas'></canvas>
-        </div>
+        <h4>The cockroach is one of the fastest insects. Place the speed of the cockroach in km/hr and view the speed in cm/sec. </h4>
+        <input id="form" type="number" />
+        <button onclick="cockroachSpeed(parseFloat(document.getElementById('form').value))">Submit</button>
+        <h1 id="answer"></h1>
     </div>
 </body>
 </html>
