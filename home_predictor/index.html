@@ -18,28 +18,25 @@
             Home Predictor
         </div>
         <p>Find the estimated price of your home, plus or minus $40,000</p>
-        <h2>Form Validation</h2>
-        <p>In this example, we use <code>.was-validated</code> to indicate what's missing before submitting the form:
-        </p>
-        <form action="/action_page.php" class="was-validated">
+        <form action="/action_page.php" id="form">
             <div class="row">
                 <div class="form-group col-md-4">
-                    <label for="uname">Number of days Home has been on Market</label>
-                    <input type="number" class="form-control" id="uname" placeholder="number of days" name="uname"
+                    <label for="days">Days on Market</label>
+                    <input type="number" class="form-control" id="days" placeholder="number of days" name="days"
+                        required step="0.01">
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="bathrooms">Bathrooms</label>
+                    <input type="number" class="form-control" id="bathrooms" placeholder="number of bathroms" name="bathrooms" step="0.01"
                         required>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="pwd">Bathrooms</label>
-                    <input type="number" class="form-control" id="pwd" placeholder="number of bathroms" name="pswd"
-                        required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="pwd">Square Feet</label>
-                    <input type="number" class="form-control" id="pwd" placeholder="number of square feet" name="pswd"
+                    <label for="sq_feet">Square Feet</label>
+                    <input type="number" class="form-control" id="sq_feet" placeholder="number of square feet" name="sq_feet" step="0.01"
                         required>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
@@ -48,65 +45,51 @@
             <div class="row">
                 <div class="form-group col-md-4">
                     <label for="zip">Zip</label>
-                    <input type="number" class="form-control" id="zip" placeholder="number of days" name="zip" required>
+                    <input type="number" class="form-control" id="zip" placeholder="zip" name="zip" required>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="lot">Lot size in acors</label>
-                    <input type="number" class="form-control" id="pwd" placeholder="number of bathroms" name="lot"
+                    <input type="number" class="form-control" id="lot" placeholder="number of bathroms" name="lot" step="0.01"
                         required>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="sel1">Cul de sac</label>
-                    <select class="form-control" id="sel1">
-                        <option>yes</option>
-                        <option>no</option>
+                    <label for="year">Year Home was Built</label>
+                    <input type="number" class="form-control" id="year" placeholder="number of bathroms" name="year" step="0.01"
+                        required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="cul">Cul de sac</label>
+                    <select class="form-control" id="cul">
+                        <option value='true'>yes</option>
+                        <option value="false">no</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="den">Den</label>
+                    <select class="form-control" id="den">
+                        <option value='true'>yes</option>
+                        <option value="false">no</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="laundry">Laundry</label>
+                    <select class="form-control" id="laundry">
+                        <option value='true'>yes</option>
+                        <option value="false">no</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" name="remember" required> I agree on blabla.
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Check this checkbox to continue.</div>
-                </label>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <!-- inline radio -->
-            <div class="form-check-inline">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optradio">Option 1
-                </label>
-            </div>
-            <div class="form-check-inline">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optradio">Option 2
-                </label>
-            </div>
-            <div class="form-check-inline disabled">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optradio" disabled>Option 3
-                </label>
-            </div>
-            <!-- drop down -->
-            <div class="form-group">
-                <label for="sel1">Select list:</label>
-                <select class="form-control" id="sel1">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                </select>
-            </div>
-
         </form>
+        <button type="button" onclick="getInput()" class="btn btn-primary">Submit</button>
 
-        <pre id="info"></pre>
-        <input id="input" type="number" />
-        <button onclick="predict()">Submit</button>
         <pre id="output"></pre>
     </div>
 </body>
