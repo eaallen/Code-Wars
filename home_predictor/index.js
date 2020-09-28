@@ -1,6 +1,5 @@
 function getInput(){
     const d = document
-    const el = d.getElementById
     let days = parseFloat(value('days'))
     let bathrooms = parseFloat(value('bathrooms'))
     let sq_feet = parseFloat(value('sq_feet'))
@@ -11,10 +10,20 @@ function getInput(){
     let den = value('den') === 'true'
     let laundry = value('laundry') === 'true'
     
-    // console.log(days, bathrooms, sq_feet, zip, lot, year, cul ,den, laundry)
     d.getElementById('form').className = 'was-validated'
-    let output = predict(bathrooms,cul,days,den,laundry,lot,sq_feet,year,zip)
+    let output = Math.floor(predict(bathrooms,cul,days,den,laundry,lot,sq_feet,year,zip)).toString()
+    output = format(output)
     d.getElementById('output').innerHTML = output
+}
+function format(str){
+    let arr = str.split('')
+    arr.reverse()
+    for(let i=3; i<arr.length; i = i+4){
+        arr.splice(i,0,',')
+    }
+    arr.reverse()
+    // str = '$' + Math.floor(output).toString()
+    return '$' + arr.join('')
 }
 function value(str){
     return document.getElementById(str).value
