@@ -1,7 +1,6 @@
 function pigIt(str) {
     str = str.toString()
     const pig = str.split(' ').map(x => {
-        console.log(x)
         if (x.charCodeAt(0) >= 65) {
             x = x.split('')
             if (x.length < 2) {
@@ -18,7 +17,6 @@ function pigIt(str) {
     return pig.join(' ')
 }
 
-
-
-console.log(pigIt('@el>i awesome@ face !'))
-console.log('a'.charCodeAt(0))
+function submit(){
+    document.getElementById('output').innerHTML = pigIt(document.getElementById('input').value)
+}
