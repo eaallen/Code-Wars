@@ -8,7 +8,7 @@ function pigIt(str) {
             }
             const letter = x.shift()
             // use ascii to determin what the char is
-            x[x.length - 1].charCodeAt(0) >= 65 ? x.push(letter + "ay") : x.splice((x.length - 2), 0, (letter + 'ay'))
+            x[x.length - 1].charCodeAt(0) >= 65 ? x.push(letter + "ay") : x.splice((x.length - 1), 0, (letter + 'ay'))
             return x.join('')
         } else {
             return x
