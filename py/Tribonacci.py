@@ -8,4 +8,11 @@ def tribonacci(signature, n):
         sum_of = sum(signature[len(signature)-3:len(signature)])
         signature.append(sum_of)
     return signature
-print(tribonacci([194, 117, 173],489))
+# print(tribonacci([194, 117, 173],489))
+
+def tribonacciRefactered (signature, n):
+    res = signature[:n]
+    sig_size = len(signature)
+    for x in range(n-sig_size): res.append(sum(res[-3:]))
+    return res
+print(tribonacciRefactered([1,1,1],10))
