@@ -1,7 +1,7 @@
 import re
 def printer_error(s):
     length = len(s)
-    m = re.search('[a-m]*',s).group(0)
-    print(m)
+    err = len(re.findall('[n-z]',s))
+    return str(err)+'/'+str(length)
 
-printer_error('aawwaaaaabdfhzzz')
+print(printer_error('aawwaaaaabdfhzzz'))
