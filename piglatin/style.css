@@ -1,0 +1,11 @@
+body{
+    background-color: aqua;
+}
+
+#test{
+    width: 200px;
+    height: 400px;
+    background-color:rgba(231, 16, 16, 0.582);
+    /* opacity: .5; */
+    color: rebeccapurple
+}
