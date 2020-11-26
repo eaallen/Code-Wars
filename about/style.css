@@ -2,3 +2,31 @@
     height: 15rem;
     width: 15rem;
 }
+.container{
+    padding-top: 3rem;
+}
+
+.profile-card{
+    border: 2px solid white;
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.top{
+    height: 25rem;
+    width: auto;
+    background-image: url("./bg-code.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* background-position: 10% 30%; */
+    background-size: 100%;
+}
+.bottom{
+    height: 100%;
+}
+
+.shade{
+    background-color: rgba(0, 0, 0, 0.6);
+    height: inherit;
+}
