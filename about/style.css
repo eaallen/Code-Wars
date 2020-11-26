@@ -1,9 +1,13 @@
-.profile_img{
+.profile-img{
     height: 15rem;
     width: 15rem;
+    position: absolute;
+    top: -8rem;
+    z-index: 1;
 }
-.container{
-    padding-top: 3rem;
+.my-container{
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .profile-card{
@@ -14,19 +18,79 @@
 }
 
 .top{
-    height: 25rem;
-    width: auto;
+    height: 15rem;
+    width: 100%;
     background-image: url("./bg-code.png");
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-color: black;
+    background-size: cover;
     /* background-position: 10% 30%; */
-    background-size: 100%;
+    /* background-size: 100%; */
 }
 .bottom{
     height: 100%;
 }
 
 .shade{
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.4);
     height: inherit;
+    width: 100% !important;
+    padding-left: 0 !important;
+
 }
+
+.gradient{
+    background: linear-gradient(to bottom, rgba(255,0,0,0), rgba(0,0,0,1));
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 3rem 0;
+    height: 3rem;
+}
+
+.body{
+    padding: 0 20rem;
+}
+.head{
+    padding-left: 10rem;
+    padding-top: 1rem;
+}
+.detail{
+    margin-top: 3rem;
+}
+
+.nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(29, 28, 28);
+}
+  
+li {
+    float: left;
+}
+  
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 7px 16px;
+    text-decoration: none;
+    transition: 150ms;
+}
+  
+li a:hover {
+    background-color: #fff;
+    text-decoration: none;
+    color: #007bff;
+    
+}
+
+.active{
+    background-color: #fff;
+    color: #007bff !important;
+}
+
+  

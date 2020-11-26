@@ -12,18 +12,78 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 
-<body class="bg-dark text-light">
+<body class="text-light bg-light">
+  <div>
+    <ul class="nav-list">
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="https://www.linkedin.com/in/elijah-andrew-allen/">Linkedin</a></li>
+      <li><a href="https://github.com/eaallen/">GitHub</a></li>
+      <li ><a href="./index.html" class="active">About</a></li>
+    </ul>
+  </div>
   <div class="container-fluid bg-light">
     <div class="row">
-      <div class="top bg-primary col-md-12">
+      <div class="bg-primary col-md-12 top p-0">
         <div class="shade">
-
+          <div class="gradient">
+            <div class="row text-center no-gutters">
+              <div class="col-md-3">
+                <img class="rounded-circle img-thumbnail profile-img"
+                  src="https://avatars0.githubusercontent.com/u/56412012?s=460&u=8e84ee790ac69e53da8dd61ab8268feb98493ccb&v=4"
+                  alt="me">
+              </div>
+              <div class="col-md-3">Github</div>
+              <div class="col-md-3">Kyu</div>
+              <div class="col-md-3">YEET</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="bottom bg-success col-md-12">
-        botom
+      <div class="body text-dark col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="head">
+              <h1>
+                Elijah Allen
+              </h1>
+              <h2>
+                Software Engineer at Lodestone
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div class="row detail">
+          <div class="col-md-2">Nov 25, 2020</div>
+          <div class="col-md-10">
+            <h6>Machine Learning in Python</h6>
+            Finished a ML Model to predict how many people will vote for a certin pie. 
+            I also built a live database with Cloud Firestore to store data for the ML model. 
+            I then created an API to call the data using NodeJS and Firebase. I tested two models,
+            and MLR and a CART. MLR had an Average error of 60. CART's average error was only 10. 
+            Therefore, I chose the CART model.
+          </div>
+        </div>
+        <div class="row detail">
+          <div class="col-md-2">Nov 7, 2020</div>
+          <div class="col-md-10">
+            <h6>MLR Home Predictor</h6>
+            I used JMP to create an MLR Model to predict housing prices for homes in Utah County. 
+            I then created the model in JavaScript a created a form for users to use on the internet. <br>
+            <a href="../home_predictor/index.html">Try it out for yourself.</a>
+          </div>
+        </div>
+        <div class="row detail">
+          <div class="col-md-2">June 28, 2020</div>
+          <div class="col-md-10">
+            <h6>Fast Firestore</h6>
+            I created a web app that allows developers to import data to Firestore with the commitment of setting up a payment plan. 
+            This is very useful for quickly uploading test data to the NoSQL database. There is still more that could be done so if you are
+            interested in helping out feel free to contact me. <br>
+            <a href="https://fast-firestore.web.app/">https://fast-firestore.web.app/</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
