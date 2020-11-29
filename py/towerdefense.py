@@ -29,6 +29,8 @@ def setUpData(towers, alians, path):
             'range': towers[key][0],
             'rate': towers[key][1],
             'position': getTowerPosition(key, path)}
+    for key in towersv2:
+       towersv2[key]['target_path_idx'] = getAffectedBlocks(towersv2[key])
     return towersv2, aliansv2
 
 
@@ -38,9 +40,7 @@ def calcTowerDamageOnAlian(tower, affected_blocks):
     return (affected_blocks * rate)
 
 def battle(towers, alians, path, path_length):
-    for key in towers:
-       towers[key]['target_path_idx'] = getAffectedBlocks(towers[key])
-    print('TOWERS',towers)
+    print(towers)
     return
 
 def runTheGauntlet(alians, path_length, towers, path):
