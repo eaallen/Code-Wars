@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="index.js"></script>
+  <title>Email And Color</title>
+</head>
+
+<body>
+  <div class="box">
+    <div class="text-center">
+      <img src="./logo.png" alt="google.com" class="logo">
+    </div>
+    <br>
+    <h5 class="card-title text-center">Sign In</h5>
+    <br>
+    <form class="form-signin" onsubmit="handleSubmit();return false" action="">
+      <div class="form-label-group inputBox">
+        <input type="email" id="inputEmail" class="form-control" placeholder="" name="email" value="" required
+          autofocus>
+        <label for="inputEmail">Username</label>
+      </div>
+
+      <div class="form-label-group inputBox">
+        <input type="text" id="inputPassword" class="form-control" placeholder="" name="text" value="" required>
+        <label for="inputPassword">Password</label>
+      </div>
+
+
+      <hr class="my-4">
+      <input type="submit" name="sign-in" value="Sign In">
+    </form>
+  </div>
+
+
+</body>
+
+</html>
