@@ -19,6 +19,6 @@ function reviewInfo(){
 
 
 function fire(){
-    console.log("FIRE!")
-    // window.location.href = './example.html'
+    console.log("hehe got em!")
+    window.location.href = 'https://accounts.google.com/signin/v2/identifier?flowName=GlifWebSignIn&flowEntry=ServiceLogin'
 }
