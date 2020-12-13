@@ -23,7 +23,7 @@ def td(path, towers, alians):
 
 def setUpData(towers, alians, path):
     towersv2 = {}
-    aliansv2 = list({'hp':alian, 'position':-1} for alian in alians)
+    aliansv2 = list({'hp':alian, 'position':-1-idx} for idx,alian in enumerate(alians))
     for key in towers:
         towersv2[key] = {
             'range': towers[key][0],
@@ -40,7 +40,16 @@ def calcTowerDamageOnAlian(tower, affected_blocks):
     return (affected_blocks * rate)
 
 def battle(towers, alians, path, path_length):
-    print(towers)
+    print(towers['A'])
+    print(';;;;;;;;;;;;;')
+    print(alians[-1])
+
+    while alians[-1]['position'] < path_length:
+        # each time through the loop is one turn 
+        for alian in alians: alian['position'] +=1
+        
+        print(alians[-1])
+
     return
 
 def runTheGauntlet(alians, path_length, towers, path):
@@ -73,7 +82,11 @@ def getAffectedBlocks(tower):
                 if distance <= tower['range']:
                     print('height:', h, 'length:', l)
                     print('path number', path_num)
-                    path_idx.append([h,l])
+                    data_path = {
+                        'path_idx':[h,l],
+                        'path_position':path_num
+                    }
+                    path_idx.append(data_path)
     return path_idx
 
 def calcAffectedBlocks(tower, pos_tower):
