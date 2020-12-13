@@ -9,6 +9,17 @@ path = [
     '      1'
 ]
 
+# [
+#     '011  1111',
+#     ' A1  1BC1',
+#     ' 11  1 11',
+#     ' 1D  1 1E',
+#     ' 111 1F11',
+#     '  G1 1  1',
+#     ' 111 1 11',
+#     ' 1H  1 1I',
+#     ' 11111 11'],
+
 towers = {'A': [3, 2], 'B': [1, 4], 'C': [2, 2], 'D': [1, 3]}
 alians = [30, 14, 27, 21, 13, 0, 15, 17, 0, 18, 26]
 
@@ -16,41 +27,49 @@ alians = [30, 14, 27, 21, 13, 0, 15, 17, 0, 18, 26]
 def td(path, towers, alians):
     path_length = ''.join(path).count('1') + 1
     print(path_length)
-    towers, alians = setUpData(towers,alians,path)
-    battle(towers,alians, path, path_length)
+    towers, alians = setUpData(towers, alians, path)
+    battle(towers, alians, path, path_length)
     # runTheGauntlet(alians, path_length, towers, path)
 
 
 def setUpData(towers, alians, path):
     towersv2 = {}
-    aliansv2 = list({'hp':alian, 'position':-1-idx} for idx,alian in enumerate(alians))
+    aliansv2 = list({'hp': alian, 'position': -1-idx}
+                    for idx, alian in enumerate(alians))
     for key in towers:
         towersv2[key] = {
             'range': towers[key][0],
             'rate': towers[key][1],
             'position': getTowerPosition(key, path)}
     for key in towersv2:
-       towersv2[key]['target_path_idx'] = getAffectedBlocks(towersv2[key])
+        towersv2[key]['target_path_idx'] = getAffectedBlocks(towersv2[key])
     return towersv2, aliansv2
 
+
+def getPathBlocks(path):
+    for line in path:
+        return
 
 def calcTowerDamageOnAlian(tower, affected_blocks):
     rng = tower[0]
     rate = tower[1]
     return (affected_blocks * rate)
 
+
 def battle(towers, alians, path, path_length):
     print(towers['A'])
-    print(';;;;;;;;;;;;;')
+    print('\nAlian Tracker!\n')
     print(alians[-1])
 
     while alians[-1]['position'] < path_length:
-        # each time through the loop is one turn 
-        for alian in alians: alian['position'] +=1
-        
+        # each time through the loop is one turn
+        for alian in alians:
+            alian['position'] += 1
+
         print(alians[-1])
 
     return
+
 
 def runTheGauntlet(alians, path_length, towers, path):
     tower_positions = getTowerPositions(towers, path)
@@ -68,6 +87,7 @@ def runTheGauntlet(alians, path_length, towers, path):
         arr.append(alian)
     print(arr)
 
+
 def getAffectedBlocks(tower):
     pos_tower = tower['position']
     path_num = -1
@@ -83,11 +103,12 @@ def getAffectedBlocks(tower):
                     print('height:', h, 'length:', l)
                     print('path number', path_num)
                     data_path = {
-                        'path_idx':[h,l],
-                        'path_position':path_num
+                        'path_idx': [h, l],
+                        'path_position': path_num
                     }
                     path_idx.append(data_path)
     return path_idx
+
 
 def calcAffectedBlocks(tower, pos_tower):
     # tower = [range,rate] pos_tower = [height, length]
@@ -125,6 +146,7 @@ def calcAlianPositionOnPath(alians, turn_num, path_chords):
 
 # def getAlianPosition(alina_idx)
 
+
 def getPathChords(path):
     path_chords = list()
     for h, row in enumerate(path):
@@ -155,7 +177,7 @@ def getTowerPosition(key, path):
         except:
             None
         else:
-           return [i, row.index(key)] # height, length
+            return [i, row.index(key)]  # height, length
 
 
 td(path, towers=towers, alians=alians)
