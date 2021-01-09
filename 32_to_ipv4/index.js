@@ -35,7 +35,7 @@ function parseInt (number_str){
     if(number_str === 'one million'){return 1000000}
     if(number_str === 'zero'){return 0}
 
-    number_str = number_str.replace(/^\s(and \s)$/g, '') // get rid of and
+    number_str = number_str.replace(/^\s(and \s)$/g, '') // get rid of "and"
 
     // set up for conversion 
     let number_arr = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen']
