@@ -28,7 +28,9 @@ class Homework2 {
         console.table(obj)
         let str = 'You have: '
         for(const key in obj){
-            str += obj[key]? `${obj[key]} ${obj[key]>1 ? key+'s':key} ` :''
+            key === 'penny'
+            ? str += obj[key]? `"${obj[key]} ${obj[key]>1 ? 'pennies':key}" ` :''
+            : str += obj[key]? `"${obj[key]} ${obj[key]>1 ? key+'s':key}" ` :''
         }
         return str
     }
@@ -64,4 +66,4 @@ class Homework2 {
 const hw2 = new Homework2()
 // console.log(hw2.factorial(4))
 // console.log(hw2.fibonacci(10))
-console.log(hw2.centConverter(41))
+console.log(hw2.centConverter(2))
