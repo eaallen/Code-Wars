@@ -17,7 +17,7 @@ JavaScript code for these four tasks.
 */
 class Homework2 {
 
-    centConverter = cents => {
+    centConverter = cents => {  
         const quarter = Math.floor(cents / 25)
         const dime = Math.floor((cents - (quarter * 25)) / 10)
         const nickle = Math.floor((cents - (quarter * 25) - (dime * 10)) / 5)
