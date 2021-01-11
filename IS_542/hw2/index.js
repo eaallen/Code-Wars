@@ -17,20 +17,20 @@ JavaScript code for these four tasks.
 */
 class Homework2 {
 
-    centConverter = cents => {  
+    centConverter = cents => {
         const quarter = Math.floor(cents / 25)
         const dime = Math.floor((cents - (quarter * 25)) / 10)
         const nickle = Math.floor((cents - (quarter * 25) - (dime * 10)) / 5)
         const penny = Math.floor((cents - (quarter * 25) - (dime * 10) - (nickle * 5)) / 1)
-        
+
         const obj = { quarter: quarter, dime: dime, nickle: nickle, penny: penny }
 
         console.table(obj)
         let str = 'You have: '
-        for(const key in obj){
+        for (const key in obj) {
             key === 'penny'
-            ? str += obj[key]? `"${obj[key]} ${obj[key]>1 ? 'pennies':key}" ` :''
-            : str += obj[key]? `"${obj[key]} ${obj[key]>1 ? key+'s':key}" ` :''
+                ? str += obj[key] ? `"${obj[key]} ${obj[key] > 1 ? 'pennies' : key}" ` : ''
+                : str += obj[key] ? `"${obj[key]} ${obj[key] > 1 ? key + 's' : key}" ` : ''
         }
         return str
     }
@@ -67,3 +67,12 @@ const hw2 = new Homework2()
 // console.log(hw2.factorial(4))
 // console.log(hw2.fibonacci(10))
 console.log(hw2.centConverter(2))
+
+
+class DOMBuilder {
+    createFunctionUI = (func, params) => {
+       const form = document.createElement('form')
+       form.setAttribute('id',params.id+'_form')
+       
+    }
+}
