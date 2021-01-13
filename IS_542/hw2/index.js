@@ -12,21 +12,35 @@ class Homework2 {
         const quarter = Math.floor(cents / 25)
         const dime = Math.floor((cents - (quarter * 25)) / 10)
         const nickle = Math.floor((cents - (quarter * 25) - (dime * 10)) / 5)
-        const penny = Math.floor((cents - (quarter * 25) - (dime * 10) - (nickle * 5)) / 1)
+        const penny = 
+            Math.floor((cents - (quarter * 25) - (dime * 10) - (nickle * 5)) / 1)
 
         const obj = { quarter: quarter, dime: dime, nickle: nickle, penny: penny }
 
         console.table(obj)
         let str = 'You have: '
         for (const key in obj) {
+            // would love to get some feed back on 
+            // line (27) not sure if this is good or bad practice, 
+            // i have an if statementshich is only here 
+            // for one particular case, "Penny v Pennies"
             key === 'penny'
-                ? str += obj[key] ? `"${obj[key]} ${obj[key] > 1 ? 'pennies' : key}" ` : ''
-                : str += obj[key] ? `"${obj[key]} ${obj[key] > 1 ? key + 's' : key}" ` : ''
+                ? str += obj[key] 
+                    ? `"${obj[key]} ${obj[key] > 1 
+                        ? 'pennies' 
+                        : key}" ` 
+                    : '' 
+                : str += obj[key] 
+                    ? `"${obj[key]} ${obj[key] > 1 
+                        ? key + 's' 
+                        : key}" ` 
+                    : ''
         }
         return str
     }
 
-    // Compute the ith Fibonacci number (1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, …)
+    // Compute the ith Fibonacci number 
+    // (1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, …)
     fibonacci = number => {
         let num = 1
         const arr = [0, 1]
@@ -44,7 +58,8 @@ class Homework2 {
         return sum
     }
 
-    // Compute the sum of all integers between two given integers (inclusive)
+    // Compute the sum of all integers
+    //  between two given integers (inclusive)
     sumBetweenInts = (a, b) => {
         let start = a <= b ? a : b // get the lowest number to start
         let end = start === a ? b : a
@@ -58,9 +73,10 @@ class Homework2 {
 }
 
 const hw2 = new Homework2()
+console.log(hw2.sumBetweenInts(12,4))
 console.log(hw2.factorial(4))
 console.log(hw2.fibonacci(10))
-console.log(hw2.centConverter(2))
+console.log(hw2.centConverter(11861))
 
 
 class DOMBuilder {
