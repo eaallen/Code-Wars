@@ -1,64 +1,97 @@
-
-const testFunction = function () {
-    let value = 0
-    return {
-        increment: function (inc) {
-            value += typeof inc === 'number' ? inc : 1
-        },
-        getValue: () => value
-    }
-}()
-
 const stringValidator = function () {
     let is_valid = null
+    const isValidNumber = text_array => {
+        for (const txt of text_array) {
+            if(isNaN(txt)){
+                is_valid = false
+                return false
+            }
+        }
+        is_valid = true
+        return is_valid
+    }
     return {
-        isNumeric: text => {
-            // rewrite
-            text.match(/[^\-][^\d][^\.][^\d]/g) ? is_valid = false : is_valid = true
-            typeof parseFloat(text) === 'number' ? is_valid = true : is_valid = false
-            return is_valid
-        },
+        isNumeric: text => isValidNumber([text]),
         isInteger: text => {
-            text.match(/[^\-][^\d]/g) ? is_valid = false : is_valid = true
+            if (isValidNumber([text])) {
+                is_valid = text.match(/[^\-][^\d]/g) ? false : true
+                return is_valid
+            }
             return is_valid
         },
         isPositiveInteger: text => {
-            if (!text.match(/[^\d]/g) && text > 0) is_valid = true
-            else is_valid = false
+            if (isValidNumber([text])) {
+                is_valid = (!text.match(/[^\d]/g) && text > 0) ? true : false
+                return is_valid
+            }
             return is_valid
         },
         isNonNegetiveInteger: text => {
-            if (!text.match(/[^\d]/g)) is_valid = true
-            else is_valid = false
+            if (isValidNumber([text])) {
+                is_valid = (!text.match(/[^\d]/g) && text >= 0) ? true : false
+                return is_valid
+            }
             return is_valid
         },
         isInRange: (text, m, n) => {
-            const min = m >= n ? n : m
-            const max = min === n ? m : n
-            // const num = 
-            // if()
+            if (isValidNumber([text,m,n])) {
+                m = parseFloat(m)
+                n = parseFloat(n)
+                const min = m >= n ? n : m
+                const max = min === n ? m : n
+                const num = parseFloat(text)
+                if(num >= min && num <=max){
+                    is_valid = true
+                    return is_valid
+                }
+                is_valid = false
+                return is_valid
+            }            
             return is_valid
         },
-        isValidEmail: text => { },
-        isNonEmpty: text => { },
-        lengthIsInRange: text => { },
-        matchesRegex: text => { },
-        isValid: text => { },
-        reset: () => { is_valid = null },
+        isValidEmail: text => {
+            const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+            is_valid = regex.test(String(text).toLowerCase())
+            return is_valid
+        },
+        isNonEmpty: text => { 
+            is_valid = (text === '')? false : true
+            return is_valid
+        },
+        lengthIsInRange: (text, m, n) => { 
+            if (isValidNumber([m,n])) {
+                m = parseFloat(m)
+                n = parseFloat(n)
+                const min = m >= n ? n : m
+                const max = min === n ? m : n
+                const num = text.length
+                if(num >= min && num <=max){
+                    is_valid = true
+                    return is_valid
+                }
+                is_valid = false
+                return is_valid
+            }            
+            return is_valid
+        },
+        matchesRegex: (text, regex) => { 
+            is_valid = regex.test(String(text).toLowerCase())
+            return is_valid
+        },
+        isValid: () => is_valid,
+        reset: () => is_valid = null,
     }
 }()
 
-console.log(parseFloat("1.@"))
-console.log(stringValidator.isNonNegetiveInteger('1e2'))
-
-
-
-
 
 console.table({
-    isNumeric: stringValidator.isNumeric('--124'),
-    isInteger: stringValidator.isInteger('-12-'),
-    isPositiveInteger: stringValidator.isPositiveInteger('2'),
-    isNonNegetiveInteger: stringValidator.isNonNegetiveInteger('0'),
-    isInRange: null,
+    isNumeric: stringValidator.isNumeric('-2'),
+    isInteger: stringValidator.isInteger('-2'),
+    isPositiveInteger: stringValidator.isPositiveInteger('1'),
+    isNonNegetiveInteger: stringValidator.isNonNegetiveInteger('2'),
+    isInRange: stringValidator.isInRange('2','0','4'),
+    isValidEmail: stringValidator.isValidEmail('kandy3kane@gmail.com'),
+    lengthIsInRange: stringValidator.lengthIsInRange('hello',2,100),
+    matchesRegex: stringValidator.matchesRegex('hello world',/\s/g),
+    isValid: stringValidator.isValid(),
 })
