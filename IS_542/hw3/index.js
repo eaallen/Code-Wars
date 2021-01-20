@@ -95,14 +95,29 @@ const stringValidator = function () {
 }()
 
 
-console.table({
-    isNumeric: stringValidator.isNumeric('-2'),
-    isInteger: stringValidator.isInteger('-2'),
-    isPositiveInteger: stringValidator.isPositiveInteger('1'),
-    isNonNegetiveInteger: stringValidator.isNonNegetiveInteger('2'),
-    isInRange: stringValidator.isInRange('2', '0', '4'),
-    isValidEmail: stringValidator.isValidEmail('kandy3kane@gmail.com'),
-    lengthIsInRange: stringValidator.lengthIsInRange('hello', 2, 100),
-    matchesRegex: stringValidator.matchesRegex('hello world', /\s/g),
-    isValid: stringValidator.isValid(),
-})
+// console.table({
+//     isNumeric: stringValidator.isNumeric('-2'),
+//     isInteger: stringValidator.isInteger('-2'),
+//     isPositiveInteger: stringValidator.isPositiveInteger('1'),
+//     isNonNegetiveInteger: stringValidator.isNonNegetiveInteger('2'),
+//     isInRange: stringValidator.isInRange('2', '0', '4'),
+//     isValidEmail: stringValidator.isValidEmail('kandy3kane@gmail.com'),
+//     lengthIsInRange: stringValidator.lengthIsInRange('hello', 2, 100),
+//     matchesRegex: stringValidator.matchesRegex('hello world', /\s/g),
+//     isValid: stringValidator.isValid(),
+// })
+// ------------------------------ QUIZ -----------------------------
+
+class myClass{
+    num1 =1
+    num2 =2
+
+    constructor(){
+        num1=4
+    }
+    add(){
+        console.log(num1+num2)
+    }
+}
+
+new myClass().add()

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   IEEE-754 Floating Point Calculator 
+    <br>
+    Binary Calculator
+    <input type="number" id='bits' value="00111110001000000000000000000000"> 
+    <br>
+    <input type="button" value="Submit" onclick="calc(document.getElementById('bits').value)">
+    <p id='pit'></p>
+    <script>
+        
+        console.log(document.getElementById('bits').value.length)
+        function calc(bit_str){
+            let neg_sign = parseInt(bit_str[0])
+            let e = parseInt(bit_str.slice(1,9),2)
+            let float = bit_str.slice(9,bit_str.length)
+            
+
+            let negetive = neg_sign? '-' : ''
+            console.table({
+                neg: negetive, int:e, float:float
+            })
+            let x=1
+            for(let i=0; i<float.length; i++){
+                let bit = parseInt(float[i])
+                x+= bit*(2**-(i+1))
+            }
+            console.log(x,'iiii')
+
+            let value = ((-1)**neg_sign) * (2**e-127) * x
+            console.log(value,'<---')
+
+            document.getElementById('pit').innerHTML = value
+        }
+    </script>
+</body>
+</html>
