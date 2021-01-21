@@ -9,6 +9,7 @@ statement in it, and also excepts a call back.
 I also just noticed that some of these returns are redundent
 as well.  
 *************************************************************/
+
 const stringValidator = function () {
     let is_valid = null
     const isValidNumber = text_array => {
