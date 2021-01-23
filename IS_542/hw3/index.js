@@ -2,9 +2,9 @@
 It took me about 3 hours to complete this assigment
 The most part was easy, that hardest part was actually figuring 
 out if a number was NaN or not. I ended up making the
-isValidNumber method to handle this issue. As you can tell
+isNumeric method to handle this issue. As you can tell
 my code got pretty repetitive. Perhaps What I should have done
-is make a function that has the  if isValidNumber([text])
+is make a function that has the  if isNumeric([text])
 statement in it, and also excepts a call back.
 I also just noticed that some of these returns are redundent
 as well.  
@@ -12,41 +12,40 @@ as well.
 
 const stringValidator = function () {
     let is_valid = null
-    const isValidNumber = text_array => {
-        for (const txt of text_array) {
-            if (isNaN(txt)) {
-                is_valid = false
-                return false
-            }
-        }
-        is_valid = true
-        return is_valid
-    }
     return {
-        isNumeric: text => isValidNumber([text]),
-        isInteger: text => {
-            if (isValidNumber([text])) {
+        isNumeric:  function(text_array){
+            for (const txt of text_array) {
+                if (isNaN(txt)) {
+                    is_valid = false
+                    return false
+                }
+            }
+            is_valid = true
+            return is_valid
+        },
+        isInteger: function(text) {
+            if (this.isNumeric([text])) {
                 is_valid = text.match(/[^\-][^\d]/g) ? false : true
                 return is_valid
             }
             return is_valid
         },
-        isPositiveInteger: text => {
-            if (isValidNumber([text])) {
+        isPositiveInteger: function(text) {
+            if (this.isNumeric([text])) {
                 is_valid = (!text.match(/[^\d]/g) && text > 0) ? true : false
                 return is_valid
             }
             return is_valid
         },
-        isNonNegetiveInteger: text => {
-            if (isValidNumber([text])) {
+        isNonNegetiveInteger: function(text) {
+            if (this.isNumeric([text])) {
                 is_valid = (!text.match(/[^\d]/g) && text >= 0) ? true : false
                 return is_valid
             }
             return is_valid
         },
-        isInRange: (text, m, n) => {
-            if (isValidNumber([text, m, n])) {
+        isInRange: function(text, m, n) {
+            if (this.isNumeric([text, m, n])) {
                 m = parseFloat(m)
                 n = parseFloat(n)
                 const min = m >= n ? n : m
@@ -61,17 +60,17 @@ const stringValidator = function () {
             }
             return is_valid
         },
-        isValidEmail: text => {
+        isValidEmail: function(text) {
             const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
             is_valid = regex.test(String(text).toLowerCase())
             return is_valid
         },
-        isNonEmpty: text => {
+        isNonEmpty: function(text) {
             is_valid = (text === '') ? false : true
             return is_valid
         },
-        lengthIsInRange: (text, m, n) => {
-            if (isValidNumber([m, n])) {
+        lengthIsInRange: function(text, m, n){
+            if (this.isNumeric([m, n])) {
                 m = parseFloat(m)
                 n = parseFloat(n)
                 const min = m >= n ? n : m
@@ -86,7 +85,7 @@ const stringValidator = function () {
             }
             return is_valid
         },
-        matchesRegex: (text, regex) => {
+        matchesRegex: function(text, regex) {
             is_valid = regex.test(String(text).toLowerCase())
             return is_valid
         },
