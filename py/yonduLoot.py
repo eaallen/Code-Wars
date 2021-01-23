@@ -1,7 +1,10 @@
+pirates = int(input('How many pirates:'))
+
+
 yondo_percent = 0.13
 peter_percent = 0.11
-crew_count = 18
-loot = 1000
+crew_count = pirates-2
+loot = int(input('how much loot'))
 
 loot_after_crew = loot - (crew_count*3)
 print('loot_after_crew', loot_after_crew)
