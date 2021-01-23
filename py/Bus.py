@@ -34,4 +34,4 @@ def number(stops):
 # print(number([[3,0],[9,1],[4,8],[12,2],[6,1],[7,8]]))
 
 
-print(list(x for x in range(5)))
+print(list(x+1 for x in range(5)))
