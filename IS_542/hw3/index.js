@@ -1,13 +1,11 @@
 /************************************************************
 It took me about 3 hours to complete this assigment
 The most part was easy, that hardest part was actually figuring 
-out if a number was NaN or not. I ended up making the
-isNumeric method to handle this issue. As you can tell
-my code got pretty repetitive. Perhaps What I should have done
-is make a function that has the  if isNumeric([text])
-statement in it, and also excepts a call back.
-I also just noticed that some of these returns are redundent
-as well.  
+out if a number was NaN or not. Once I realized that isNaN was the method I 
+need then things got alot better.
+
+I learned that I should be using function instead of =>
+so that I can call the function with this.
 *************************************************************/
 
 const stringValidator = function () {
@@ -106,3 +104,8 @@ console.table({
     matchesRegex: stringValidator.matchesRegex('hello world', /\s/g),
     isValid: stringValidator.isValid(),
 })
+
+
+// test API
+
+
