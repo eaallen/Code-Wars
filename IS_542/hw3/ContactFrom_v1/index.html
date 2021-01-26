@@ -25,8 +25,9 @@
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<!--===============================================================================================-->
-	<script src="../index.js"></script>
 	<link rel="stylesheet" href="../style.css">
+	<script src="../index.js"></script>
+
 </head>
 
 <body>
@@ -35,8 +36,9 @@
 
 	<div class="contact1">
 
-		<div class="container-contact1">
+		<div class="container-contact1 validation">
 			Validation area
+			<div id="output"></div>
 		</div>
 		<br>
 		<div class="container-contact1">
@@ -44,27 +46,27 @@
 				<img src="images/img-01.png" alt="IMG">
 			</div>
 
-			<form class="contact1-form validate-form">
+			<form class="contact1-form" onsubmit="onSubmit();return stringValidator.isValid()">
 				<span class="contact1-form-title">
 					Get in touch
 				</span>
 
-				<div class="wrap-input1 validate-input" data-validate="Name is required">
+				<div class="wrap-input1 validate-input">
 					<input class="input1" type="text" name="name" placeholder="Name">
 					<span class="shadow-input1"></span>
 				</div>
 
-				<div class="wrap-input1 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+				<div class="wrap-input1 validate-input">
 					<input class="input1" type="text" name="email" placeholder="Email">
 					<span class="shadow-input1"></span>
 				</div>
 
-				<div class="wrap-input1 validate-input" data-validate="Subject is required">
+				<div class="wrap-input1 validate-input">
 					<input class="input1" type="text" name="subject" placeholder="Subject">
 					<span class="shadow-input1"></span>
 				</div>
 
-				<div class="wrap-input1 validate-input" data-validate="Message is required">
+				<div class="wrap-input1 validate-input">
 					<textarea class="input1" name="message" placeholder="Message"></textarea>
 					<span class="shadow-input1"></span>
 				</div>
@@ -111,6 +113,7 @@
 
 	<!--===============================================================================================-->
 	<script src="js/main.js"></script>
+	<!-- My JS -->
 
 </body>
 

@@ -9,3 +9,22 @@
     background-color: white;
 
 }
+
+.contact1{
+    display: block;
+}
+
+.container-contact1{
+    
+}
+
+.validation{
+    padding: 1rem !important;
+    display: block;
+}
+
+.output-msg{
+    display: block;
+    color: red;
+    font-weight:600;
+}

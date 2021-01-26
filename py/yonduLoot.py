@@ -1,3 +1,7 @@
+import fibo
+
+fibo.fib(1000)
+
 pirates = int(input('How many pirates:'))
 
 
