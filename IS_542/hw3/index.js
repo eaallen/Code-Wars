@@ -1,18 +1,13 @@
 /************************************************************
-It took me about 3 hours to complete this assigment
-The most part was easy, that hardest part was actually figuring 
-out if a number was NaN or not. Once I realized that isNaN was the method I 
-need then things got alot better.
-
-I learned that I should be using function instead of =>
-so that I can call the function with this.
+HW 4, I used a contact form from online. I only needed to 
+validate for empty inputs and corect email address.  
 *************************************************************/
 
 const stringValidator = function () {
     let is_valid = null
     const validation_messages = {
         is_non_empty: {
-            msg: 'This area must not be blank.',
+            msg: 'required',
             pass: null,
         },
         is_valid_email: {
@@ -123,13 +118,26 @@ const stringValidator = function () {
 
 // console.table({...stringValidator.getValidationMessages()})
 
+const shouldSubmit = function (){
+    let form_is_valid = true
+    return{
+        passForm(bool){
+            if(form_is_valid !== false){
+                form_is_valid = bool
+            }
+        },
+        shouldSubmit(){
+            return form_is_valid
+        }
+    }
+}()
 
 function onSubmit() {
     const { email, message, name, subject } = document.getElementsByClassName('input1')
     const output = document.getElementById('output')
     output.innerHTML = ''
     const validation_error_message = {
-        email: ['test'],
+        email: [],
         message: [],
         name: [],
         subject: [],
@@ -141,13 +149,16 @@ function onSubmit() {
     for (const el of array_of_inputs) {
         stringValidator.isNonEmpty(el.value)
         const validation_results = stringValidator.getValidationMessages()
-        stringValidator.isValid()
-            ? null
-            : validation_error_message[el.name].push(`${el.name} must not be empty`)
+        if(!validation_results.is_non_empty.pass){
+            shouldSubmit.passForm(validation_results.is_non_empty.pass)
+            validation_error_message[el.name].push(`${validation_results.is_non_empty.msg}`)
+        }
+ 
     }
 
     // Validate email address 
     if (!stringValidator.isValidEmail(email.value)) {
+        shouldSubmit.passForm(false)
         validation_error_message[email.name].push('must have correct email')
     }
 
