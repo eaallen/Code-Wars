@@ -1,24 +1,22 @@
-
 const Scriptures = (function () {
     // Constants
     let books
     let volumes
 
-    const cacheBooks = function(callback){
+    const cacheBooks = function (callback) {
         volumes.forEach(volume => {
-            const volume_books = [] 
+            const volume_books = []
             let book_id = volume.minBookId
 
-            while(book_id <= volume.maxBookId){
+            while (book_id <= volume.maxBookId) {
                 volume_books.push(books[book_id])
                 book_id++
             }
             volume.books = volume_books
         });
-        if(typeof callback === 'function'){
-            callback()
+        if (typeof callback === 'function') {
+            callback(volumes)
         }
-        console.log(volumes)
     }
 
     const ajax = function (url, successCallback, failCallback) {
@@ -50,23 +48,36 @@ const Scriptures = (function () {
         ajax('https://scriptures.byu.edu/mapscrip/model/books.php', data => {
             books = data
             books_loaded = true
-            if(vols_loaded){
+            if (vols_loaded) {
                 cacheBooks(callback)
             }
-        }, () => console.error('error'))
+        }, () => console.error('error books'))
         ajax('https://scriptures.byu.edu/mapscrip/model/volumes.php', data => {
             volumes = data
             vols_loaded = true
-            if(books_loaded){
+            if (books_loaded) {
                 cacheBooks(callback)
             }
-        })
+        }, () => console.error('error volumes'))
 
     }
 
     return {
         init: init,
-        books:books,
-        volumes:volumes
     }
 }())
+
+// load the data and pass it to main when ready
+function ready(fn) {
+    if (document.readyState != 'loading') {
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+
+ready(Scriptures.init(main))
+
+
+
+
