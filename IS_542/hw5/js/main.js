@@ -20,6 +20,7 @@ function main(data) {
                 if(navigator.state.DOM.test){
                     navigator.removeChild(navigator.state.master.id,navigator.state.DOM.test)
                 }
+                // populate the navigator with nested data  
                 navigator.pushElement(null, 'div', 'test', null, `<strong> ${item.books.map(x=>x.fullName).join('<br>')} </strong>`)
             }
         }
@@ -42,8 +43,3 @@ function main(data) {
     // document.body.insertBefore(div, currentDiv);
 
 }
-
-const renderHead = function (arr_item) {
-
-}
-

@@ -65,12 +65,25 @@ class UI {
 
     }
 
+    // remove any child in parent node
     removeChild = (parent_node_id, child) => {
         if (parent_node_id) {
             document.getElementById(parent_node_id).removeChild(child)
         } else {
             this.state.master.div.removeChild(child)
         }
+    }
+
+    // remove last child in parent node
+    popChild(parent_node_id) {
+        const select = parent_node_id ? document.getElementById(parent_node_id) : this.state.master.div
+        select.removeChild(select.lastChild)
+    }
+
+    // remove first child in parent node
+    shiftChild(parent_node_id) {
+        const select = parent_node_id ? document.getElementById(parent_node_id) : this.state.master.div
+        select.removeChild(select.firstChild)
     }
 
 
