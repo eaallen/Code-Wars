@@ -1,7 +1,29 @@
+/*================================================================================
+ * FILE:    scriptures.js
+ * AUTHOR:  Elijah Allen
+ * DATE:    Winter 2021
+ * 
+ * DESCRIPTION: Forntend web dev IS452 Scriptures and google maps
+ */
+
+
 const Scriptures = (function () {
-    // Constants
+    // ------------------------------------- Constants -----------------------------------
+    const REQUEST_GET = "GET"
+    const REQUEST_STATUS_OK = 200
+    const REQUEST_STATUS_ERROR = 400
+    //--------------------------------------- Variables -----------------------------------
     let books
     let volumes
+
+    // ----------------------------------- Functions --------------------------------------
+    const HTML = HTMLHelper // statuc class with helper functions 
+
+    const onHashChange = function(){
+        let hash = window.location.hash
+        hash = hash.slice(1).split(":")
+        console.log(hash)
+    }
 
     const cacheBooks = function (callback) {
         volumes.forEach(volume => {
@@ -21,10 +43,10 @@ const Scriptures = (function () {
 
     const ajax = function (url, successCallback, failCallback) {
         let request = new XMLHttpRequest();
-        request.open('GET', url, true);
+        request.open(REQUEST_GET, url, true);
 
         request.onload = function () {
-            if (this.status >= 200 && this.status < 400) {
+            if (this.status >= REQUEST_STATUS_OK && this.status < REQUEST_STATUS_ERROR) {
                 // Success!
                 let data = JSON.parse(this.response);
                 if (typeof successCallback === 'function') {
@@ -64,19 +86,10 @@ const Scriptures = (function () {
 
     return {
         init: init,
+        onHashChange: onHashChange
     }
 }())
 
-// load the data and pass it to main when ready
-function ready(fn) {
-    if (document.readyState != 'loading') {
-        fn();
-    } else {
-        document.addEventListener('DOMContentLoaded', fn);
-    }
-}
-
-ready(Scriptures.init(main))
 
 
 

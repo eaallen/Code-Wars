@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,43 @@
     <title>Homework 5</title>
     <script src="./js/ui.js"></script>
     <script src="./js/main.js"></script>
+    <script src="./js/HTMLHelper.js"></script>
     <script src="./js/scriptures.js"></script>
 </head>
+
 <body>
-    <div id="header"></div>
-    <div id="navigator"></div>
-    <div id="map"></div>
+    <div id="header">
+        <div id="center-head">
+            <div id="title">
+                The Scriptures Mapped
+            </div>
+            <div id="subtitle">Elijah Allen</div>
+        </div>
+    </div>
+    <div id="content">
+        <div id="navigator"></div>
+        <div id="map"></div>
+    </div>
+
+
+
+    <!-- Call this script to get data -->
+    <script>
+        // load the data and pass it to main when ready
+        function ready(fn) {
+            if (document.readyState != 'loading') {
+                fn();
+            } else {
+                document.addEventListener('DOMContentLoaded', fn);
+            }
+        }
+
+        ready(function(){
+            Scriptures.init(main)
+            window.addEventListener("hashchange", Scriptures.onHashChange)
+        })
+    </script>
+
 </body>
+
 </html>

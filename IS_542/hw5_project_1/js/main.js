@@ -2,6 +2,14 @@
 
 
 function main(data) {
+   
+
+
+
+}
+
+
+function legeacyCode(){
     console.log('in the main function', data)
     const volume_names = data.map(x => {
         return { fullName: x.fullName, id: x.id }
@@ -27,19 +35,4 @@ function main(data) {
         header.pushElement('header', 'div', item.fullName, 'link', null, eventHandler)
         header.pushElement(item.fullName, 'div', null, null, `${item.fullName}`)
     }
-
-
-
-
-
-
-
-
-
-
-    // document.getElementById('header').innerHTML = volume_names[0].full_name
-    // const div = document.createElement('div')
-    // const currentDiv = document.getElementById("header");
-    // document.body.insertBefore(div, currentDiv);
-
 }
