@@ -9,20 +9,83 @@
 
 const Scriptures = (function () {
     // ------------------------------------- Constants -----------------------------------
+    const CLASS_BOOKS = 'books'
+    const CLASS_VOLUMES = 'volume'
+    const DIV_SCRIPTURE_NAVIGATOR = 'scripnav'
+    const DIV_SCRIPTURES ='scriptures'
+    const TAG_HEADERS = 'h5'
+    
     const REQUEST_GET = "GET"
     const REQUEST_STATUS_OK = 200
     const REQUEST_STATUS_ERROR = 400
+
+    const URL_BASE = 'https://scriptures.byu.edu/'
+    const URL_BOOKS = `${URL_BASE}mapscrip/model/books.php`
+    const URL_VOLUMES = `${URL_BASE}mapscrip/model/volumes.php`
     //--------------------------------------- Variables -----------------------------------
-    let books
-    let volumes
+    let books // array 
+    let volumes // array
 
     // ----------------------------------- Functions --------------------------------------
     const HTML = HTMLHelper // statuc class with helper functions 
 
     const onHashChange = function(){
-        let hash = window.location.hash
-        hash = hash.slice(1).split(":")
-        console.log(hash)
+        console.log('on hash change')
+        const id_array = []
+        const location = window.location
+        const hash = location.hash
+
+        if(hash !== "" && hash.length > 1){
+            id_array.push(...hash.slice(1).split(":"))
+        }
+
+        if(hash.length <= 0){
+            navigateHome()
+        }else if(id_array.length === 1){
+            let volume_id = Number(id_array[0]) // convert id_array[0] from str to num
+
+            if(volume_id < volumes[0].id || volume_id > volumes.slice(-1)[0].id){
+                navigateHome()
+            }else{
+                navigateHome(volume_id)
+            }
+        } else{
+            let book_id = Number(id_array[1])
+            console.log('----',books[book_id])
+            if (books[book_id] === undefined) {
+                navigateHome()
+            }else {
+                if (id_array.length === 2) {
+                    
+                }else{
+                let chapter = Number(id_array[2])
+                    // video part 6 -- 6:53 time in
+                    navigateChapter(book_id, chapter)
+                }
+                navigateBook(book_id)
+            }
+        }
+
+        
+    }
+
+    const navigateBook = function(book_id){
+        console.log('book', book_id)
+    }
+    const navigateChapter = function(book_id, chapter_id){
+        console.log('book', book_id, 'chapter', chapter_id)
+    }
+
+    const navigateHome = function(volume_id){
+        const divs = [
+            '<div>Old Testament </div>',
+            '<div>New Testament</div>',
+            '<div>Book of Mormon</div>',
+            '<div>Doctrine and Covenants</div>',
+            '<div>Pearl of Great Price</div>',
+        ]
+        document.getElementById(DIV_SCRIPTURES).innerHTML = divs.join('')+volume_id
+        
     }
 
     const cacheBooks = function (callback) {
@@ -67,14 +130,14 @@ const Scriptures = (function () {
     const init = function (callback) {
         let books_loaded = false
         let vols_loaded = false
-        ajax('https://scriptures.byu.edu/mapscrip/model/books.php', data => {
+        ajax(URL_BOOKS, data => {
             books = data
             books_loaded = true
             if (vols_loaded) {
                 cacheBooks(callback)
             }
         }, () => console.error('error books'))
-        ajax('https://scriptures.byu.edu/mapscrip/model/volumes.php', data => {
+        ajax(URL_VOLUMES, data => {
             volumes = data
             vols_loaded = true
             if (books_loaded) {
