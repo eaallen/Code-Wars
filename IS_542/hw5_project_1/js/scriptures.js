@@ -23,9 +23,13 @@ const Scriptures = (function () {
     const URL_BOOKS = `${URL_BASE}mapscrip/model/books.php`
     const URL_VOLUMES = `${URL_BASE}mapscrip/model/volumes.php`
     //--------------------------------------- Variables -----------------------------------
-    let books // array 
-    let volumes // array
-
+    
+    // useing state to keep track of the state of these varaibles in this module
+    const state = {
+        books:null, // array
+        volumes:null // array
+    }
+    
     // ----------------------------------- Functions --------------------------------------
     const HTML = HTMLHelper // statuc class with helper functions 
 
@@ -44,15 +48,15 @@ const Scriptures = (function () {
         }else if(id_array.length === 1){
             let volume_id = Number(id_array[0]) // convert id_array[0] from str to num
 
-            if(volume_id < volumes[0].id || volume_id > volumes.slice(-1)[0].id){
+            if(volume_id < state.volumes[0].id || volume_id > state.volumes.slice(-1)[0].id){
                 navigateHome()
             }else{
                 navigateHome(volume_id)
             }
         } else{
             let book_id = Number(id_array[1])
-            console.log('----',books[book_id])
-            if (books[book_id] === undefined) {
+            console.log('----',state.books[book_id])
+            if (state.books[book_id] === undefined) {
                 navigateHome()
             }else {
                 if (id_array.length === 2) {
@@ -76,6 +80,10 @@ const Scriptures = (function () {
         console.log('book', book_id, 'chapter', chapter_id)
     }
 
+    const bookChapterValid = function(){
+        let book = state.books[id]
+    }
+
     const navigateHome = function(volume_id){
         const divs = [
             '<div>Old Testament </div>',
@@ -89,18 +97,18 @@ const Scriptures = (function () {
     }
 
     const cacheBooks = function (callback) {
-        volumes.forEach(volume => {
+        state.volumes.forEach(volume => {
             const volume_books = []
             let book_id = volume.minBookId
 
             while (book_id <= volume.maxBookId) {
-                volume_books.push(books[book_id])
+                volume_books.push(state.books[book_id])
                 book_id++
             }
             volume.books = volume_books
         });
         if (typeof callback === 'function') {
-            callback(volumes)
+            callback(state.volumes)
         }
     }
 
@@ -131,14 +139,14 @@ const Scriptures = (function () {
         let books_loaded = false
         let vols_loaded = false
         ajax(URL_BOOKS, data => {
-            books = data
+            state.books = data
             books_loaded = true
             if (vols_loaded) {
                 cacheBooks(callback)
             }
         }, () => console.error('error books'))
         ajax(URL_VOLUMES, data => {
-            volumes = data
+            state.volumes = data
             vols_loaded = true
             if (books_loaded) {
                 cacheBooks(callback)
