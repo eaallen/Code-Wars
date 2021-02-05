@@ -1,0 +1,59 @@
+html,body{
+    height: 100%;
+}
+body {
+    font-family: Arial;
+    margin: 0;
+    
+}
+
+#content {
+    height: 100%;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#header {
+    text-align: center;
+    background: #78b6a9;
+    padding: 1rem;
+}
+
+#map {
+    background-color: antiquewhite;
+}
+
+#scripnav {
+    background-color: #d3d2d2;
+    padding: 1rem;
+}
+
+#subtitle {}
+
+#title {
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+}
+
+.container{
+    height: 100%;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+}
+
+.col-75 {
+    flex: 75%;
+}
+
+.col-25 {
+    flex: 25%;
+}

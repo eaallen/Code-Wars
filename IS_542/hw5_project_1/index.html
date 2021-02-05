@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="This is homework number 5">
     <meta name="author" content="Elijah Allen">
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
     <title>Homework 5</title>
+    <!-- Use Strict -->
+    <script src="./strict.js"></script>
+    <!-- Other JS files  -->
     <script src="./js/ui.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/HTMLHelper.js"></script>
@@ -14,28 +19,29 @@
 </head>
 
 <body>
-    <div id="header">
-        <div id="center-head">
-            <div id="title">
-                The Scriptures Mapped
-            </div>
-            <div id="subtitle">Elijah Allen</div>
-        </div>
-    </div>
-    <div id="content">
-        <div id="scripnav">
-            <!-- volumes grid -->
-            <div id="scriptures"></div>
-            <!-- for each volume repeat the following -->
-            <div class="volume">
-                <a name='v1'></a>
-                <h5>Old Testament</h5>
+    <div class="container">
+        <div id="header">
+            <div id="center-head">
+                <div id="title">
+                    The Scriptures Mapped
+                </div>
+                <div id="subtitle">Elijah Allen</div>
             </div>
         </div>
-        <div id="navigator"></div>
-        <div id="map"></div>
+        <div id="content" class="row">
+            <div id="scripnav" class="column col-25">
+                <!-- volumes grid -->
+                <div id="scriptures"></div>
+                <!-- for each volume repeat the following -->
+                <div class="volume">
+                    <a name='v1'></a>
+                    <h5>Old Testament</h5>
+                </div>
+                <div id="navigator"></div>
+            </div>
+            <div id="map" class="col-75"></div>
+        </div>
     </div>
-
 
 
     <!-- Call this script to get data -->
