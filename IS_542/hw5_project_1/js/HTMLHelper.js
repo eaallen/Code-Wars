@@ -1,31 +1,27 @@
 class HTMLHelper {
     static anchor(volume) {
-        return `<a name="v${volume.name}><a/>`
-    }
-
-    static fn() {
-        return
+        return `<a name="${volume.name}"><a/>`
     }
 
     static div(params) {
-        let class_string = ''
-        let content_string = ''
-        let id_string = ''
+        let class_name = ''
+        let content = ''
+        let id = ''
 
 
-        if (params.class_key !== undefined) {
-            class_string = `class="${params.class_key}"`
+        if (params.class_name !== undefined) {
+            class_name = `class="${params.class_name}"`
         }
 
         if (params.content !== undefined) {
-            content_string = params.content
+            content = params.content
         }
 
         if (params.id !== undefined) {
-            id_string = `id="${params.class_key}"`
+            id = `id="${params.id}"`
         }
 
-        return `<div ${id_string} ${class_string}>${content_string}</div>`
+        return `<div ${id} ${class_name}>${content}</div>`
     }
 
     static element(tag_name, content) {
@@ -33,28 +29,28 @@ class HTMLHelper {
     }
 
     static link(params) {
-        let class_string = ''
-        let content_string = ''
-        let id_string = ''
-        let href_string = ''
+        let class_name = ''
+        let content = ''
+        let id = ''
+        let href = ''
 
-        if (params.class_key !== undefined) {
-            class_string = `class="${params.class_key}"`
+        if (params.class_name !== undefined) {
+            class_name = `class="${params.class_name}"`
         }
 
         if (params.content !== undefined) {
-            content_string = params.content
+            content = params.content
         }
 
         if (params.id !== undefined) {
-            id_string = `id="${params.class_key}"`
+            id = `id="${params.id}"`
         }
 
         if (params !== undefined) {
-            href_string = `href=${params.href}`
+            href = `href=${params.href}`
         }
 
-        return `<a ${id_string} ${class_string} ${href_string}>${content_string}</a>`
+        return `<a ${id} ${class_name} ${href}>${content}</a>`
     }
 
     static hashLink(hash_args, content) {

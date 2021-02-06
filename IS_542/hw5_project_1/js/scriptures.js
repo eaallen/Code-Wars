@@ -10,10 +10,14 @@
 const Scriptures = (function () {
     // ------------------------------------- Constants -----------------------------------
     const CLASS_BOOKS = 'books'
+    const CLASS_BUTTON = 'btn'
+    const CLASS_BUTTON_LINK = 'btn-link'
+    const CLASS_CHAPTER = 'chapter'
     const CLASS_VOLUMES = 'volume'
+
     const DIV_SCRIPTURE_NAVIGATOR = 'scripnav'
     const DIV_SCRIPTURES = 'scriptures'
-    const TAG_HEADERS = 'h5'
+    const TAG_HEADER_5 = 'h5'
 
     const REQUEST_GET = "GET"
     const REQUEST_STATUS_OK = 200
@@ -24,7 +28,7 @@ const Scriptures = (function () {
     const URL_VOLUMES = `${URL_BASE}mapscrip/model/volumes.php`
     //--------------------------------------- Variables -----------------------------------
 
-    // useing state to keep track of the state of these varaibles in this module
+    // using state to keep track of the "state" of these varaibles in this module
     const state = {
         books: null, // array
         volumes: null // array
@@ -32,6 +36,59 @@ const Scriptures = (function () {
 
     // ----------------------------------- Functions --------------------------------------
     const HTML = HTMLHelper // statuc class with helper functions 
+
+    const booksGrid = function (volume) {
+        return HTML.div({
+            class_name: CLASS_BOOKS,
+            content: booksGridContent(volume)
+        })
+    }
+
+    const booksGridContent = function (volume) {
+        let grid_content = ''
+        volume.books.forEach(book => {
+            grid_content += HTML.div({
+                class_name: CLASS_BUTTON,
+                id: book.id,
+                content: HTML.link({
+                    class_name: CLASS_BUTTON_LINK,
+                    id: '',
+                    href: `#${volume.id}:${book.id}`,
+                    content: book.gridName
+                })
+            })
+        })
+        return grid_content
+    }
+
+    const chaptersGrid = function (book) {
+        return HTML.div({
+            class_name: CLASS_VOLUMES,
+            content: HTML.element(TAG_HEADER_5, book.fullName)
+        }) + HTML.div({
+            class_name: CLASS_BOOKS,
+            content: chaptersGriContent(book)
+        })
+    }
+
+    const chaptersGriContent = function(book){
+        let grid_content = ''
+        let chapter = 1
+
+        while(chapter <= book.numChapters){
+            grid_content+= HTML.div({
+                class_name: CLASS_BUTTON,
+                content: HTML.link({
+                    class_name: CLASS_CHAPTER,
+                    id: chapter.toString()+'_chapter_id',
+                    href: `#0:${book.id}:${chapter}`,
+                    content: chapter
+                })
+            }) 
+            chapter++
+        }
+        return grid_content
+    }
 
     const onHashChange = function () {
         console.log('on hash change')
@@ -60,7 +117,7 @@ const Scriptures = (function () {
                 navigateHome()
             } else {
                 if (id_array.length === 2) {
-
+                    // Somthing should happen here but i do not know what 
                 } else {
                     let chapter = Number(id_array[2])
                     // video part 6 -- 6:53 time in
@@ -74,13 +131,22 @@ const Scriptures = (function () {
     }
 
     const navigateBook = function (book_id) {
-        console.log('book', book_id)
+        let book = state.books[book_id];
+
+        if (book.numChapters <= 1) {
+            navigateChapter(book_id, book.numChapters)
+        } else {
+            document.getElementById(DIV_SCRIPTURES).innerHTML = HTML.div({
+                id: DIV_SCRIPTURE_NAVIGATOR,
+                content: chaptersGrid(book)
+            })
+        }
     }
     const navigateChapter = function (book_id, chapter_id) {
         if (bookChapterValid(book_id, chapter_id)) {
-           console.log('book', book_id, 'chapter', chapter_id)
-           
-        }else{
+            console.log('book', book_id, 'chapter', chapter_id)
+
+        } else {
             console.error('Book or Chapter not Valid!')
         }
     }
@@ -103,15 +169,11 @@ const Scriptures = (function () {
     }
 
     const navigateHome = function (volume_id) {
-        const divs = [
-            '<div>Old Testament </div>',
-            '<div>New Testament</div>',
-            '<div>Book of Mormon</div>',
-            '<div>Doctrine and Covenants</div>',
-            '<div>Pearl of Great Price</div>',
-        ]
 
-        document.getElementById(DIV_SCRIPTURES).innerHTML = divs.join('') + (volume_id ? volume_id : '')
+        document.getElementById(DIV_SCRIPTURES).innerHTML = HTML.div({
+            id: DIV_SCRIPTURE_NAVIGATOR,
+            content: volumesGridContent(volume_id)
+        })
     }
 
     const cacheBooks = function (callback) {
@@ -128,7 +190,6 @@ const Scriptures = (function () {
         if (typeof callback === 'function') {
             callback(state.volumes)
             // show the home options 
-            navigateHome()
         }
     }
 
@@ -173,6 +234,22 @@ const Scriptures = (function () {
             }
         }, () => console.error('error volumes'))
 
+    }
+
+    const volumesGridContent = function (volume_id) {
+        let grid_content = ''
+        state.volumes.forEach(volume => {
+            if (volume_id === undefined || volume_id === volume.id) {
+                grid_content += HTML.div({
+                    class_name: CLASS_VOLUMES,
+                    content: HTML.anchor(volume) +
+                        HTML.element(TAG_HEADER_5, volume.fullName)
+                })
+                grid_content += booksGrid(volume)
+            }
+        }
+        )
+        return grid_content
     }
 
     return {

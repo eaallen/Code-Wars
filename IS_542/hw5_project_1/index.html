@@ -28,16 +28,19 @@
                 <div id="subtitle">Elijah Allen</div>
             </div>
         </div>
-        <div id="content" class="row">
-            <div id="scripnav" class="column col-25">
+        <div id="content" class="row ">
+            <div id="scripture_viewer" class="column col-25 ">
+                <div id="navigator"></div>
                 <!-- volumes grid -->
                 <div id="scriptures"></div>
                 <!-- for each volume repeat the following -->
-                <div class="volume">
+                <!-- <div class="volume">
                     <a name='v1'></a>
                     <h5>Old Testament</h5>
+                </div> -->
+                <div id="text">
+                    
                 </div>
-                <div id="navigator"></div>
             </div>
             <div id="map" class="col-75"></div>
         </div>
@@ -56,7 +59,7 @@
         }
 
         ready(function () {
-            Scriptures.init(main)
+            Scriptures.init(()=>Scriptures.onHashChange())
             window.addEventListener("hashchange", Scriptures.onHashChange)
         })
     </script>
