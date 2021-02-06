@@ -26,6 +26,7 @@ const Scriptures = (function () {
     const URL_BASE = 'https://scriptures.byu.edu/'
     const URL_BOOKS = `${URL_BASE}mapscrip/model/books.php`
     const URL_VOLUMES = `${URL_BASE}mapscrip/model/volumes.php`
+    const URL_SCRIPTURES = `${URL_BASE}mapscrip/mapgetscrip.php`
     //--------------------------------------- Variables -----------------------------------
 
     // using state to keep track of the "state" of these varaibles in this module
@@ -71,20 +72,20 @@ const Scriptures = (function () {
         })
     }
 
-    const chaptersGriContent = function(book){
+    const chaptersGriContent = function (book) {
         let grid_content = ''
         let chapter = 1
 
-        while(chapter <= book.numChapters){
-            grid_content+= HTML.div({
+        while (chapter <= book.numChapters) {
+            grid_content += HTML.div({
                 class_name: CLASS_BUTTON,
                 content: HTML.link({
                     class_name: CLASS_CHAPTER,
-                    id: chapter.toString()+'_chapter_id',
+                    id: chapter.toString() + '_chapter_id',
                     href: `#0:${book.id}:${chapter}`,
                     content: chapter
                 })
-            }) 
+            })
             chapter++
         }
         return grid_content
@@ -143,12 +144,95 @@ const Scriptures = (function () {
         }
     }
     const navigateChapter = function (book_id, chapter_id) {
-        if (bookChapterValid(book_id, chapter_id)) {
-            console.log('book', book_id, 'chapter', chapter_id)
+        ajax(
+            encodedScripturesUrlParams(book_id, chapter_id),
+            getScripturesCallback,
+            getScripturesFailure,
+            true
+        )
+    }
 
-        } else {
-            console.error('Book or Chapter not Valid!')
+    const nextChapter = function (book_id, chapter_num) {
+        let book = state.books[book_id]
+        if (book !== undefined) {
+            // looking for next chapter in book
+            if (chapter_num < book.numChapters) {
+                return [
+                    book_id,
+                    chapter_num + 1,
+                    titleForBookChapter(book, chapter_num + 1)
+                ]
+            }
+
+            let next_book = state.books[book_id + 1]
+
+            if (next_book !== undefined) {
+                let next_chapter_value = 0
+                if (next_book.numChapters > 0) {
+                    next_chapter_value = 1
+                }
+
+                return [
+                    next_book.id,
+                    next_chapter_value,
+                    titleForBookChapter(next_book, next_chapter_value)
+                ]
+            }
         }
+    }
+
+    const prevChapter = function(book_id, chapter_num){
+        let book = state.books[book_id]
+        if (book !== undefined) {
+            // looking for next chapter in book
+            if (chapter_num > 1) {
+                return [
+                    book_id,
+                    chapter_num - 1,
+                    titleForBookChapter(book, chapter_num - 1)
+                ]
+            }
+            // else: look for next book
+            let next_book = state.books[book_id - 1]
+
+            if (next_book !== undefined) {
+                let next_chapter_value = 0
+                if (next_book.numChapters > 0) {
+                    next_chapter_value = next_book.numChapters
+                }
+
+                return [
+                    next_book.id,
+                    next_chapter_value,
+                    titleForBookChapter(next_book, next_chapter_value)
+                ]
+            }
+        }
+
+    }
+
+    const encodedScripturesUrlParams = function (book_id, chapter_id, verses, is_jst) {
+        if (book_id !== undefined && chapter_id !== undefined) {
+            let options = '';
+            if (verses !== undefined) {
+                options += verses
+            }
+            if (is_jst !== undefined) {
+                options += '&jst=JST'
+            }
+            return `${URL_SCRIPTURES}?book=${book_id}&chap=${chapter_id}&verses=${options}`
+        }
+    }
+
+    const getScripturesCallback = function (html) {
+        document.getElementById(DIV_SCRIPTURES).innerHTML = html
+
+        // TODO: setupMapMarkers()
+    }
+
+    const getScripturesFailure = function (data) {
+        document.getElementById(DIV_SCRIPTURES).innerHTML = 'Error'
+        console.error('unable to retireve data', data)
     }
 
     // refactor this for better validation 
@@ -190,17 +274,22 @@ const Scriptures = (function () {
         if (typeof callback === 'function') {
             callback(state.volumes)
             // show the home options 
+
+            console.log(nextChapter(101,49))
+            console.log(prevChapter(101,1))
         }
     }
 
-    const ajax = function (url, successCallback, failCallback) {
+    const ajax = function (url, successCallback, failCallback, skip_json_parse) {
         let request = new XMLHttpRequest();
         request.open(REQUEST_GET, url, true);
 
         request.onload = function () {
-            if (this.status >= REQUEST_STATUS_OK && this.status < REQUEST_STATUS_ERROR) {
+            if (request.status >= REQUEST_STATUS_OK && request.status < REQUEST_STATUS_ERROR) {
                 // Success!
-                let data = JSON.parse(this.response);
+                let data = skip_json_parse
+                    ? request.response
+                    : JSON.parse(request.response);
                 if (typeof successCallback === 'function') {
                     successCallback(data)
                 }
@@ -234,6 +323,15 @@ const Scriptures = (function () {
             }
         }, () => console.error('error volumes'))
 
+    }
+    const titleForBookChapter = function (book, chapter_num) {
+        if (book !== undefined) {
+            if (chapter_num > 0) {
+                return `${book.tocName} ${chapter_num}`
+            }
+
+            return book.tocName
+        }
     }
 
     const volumesGridContent = function (volume_id) {
