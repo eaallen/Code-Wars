@@ -4,6 +4,7 @@
  * DATE:    Winter 2021
  * 
  * DESCRIPTION: Forntend web dev IS452 Scriptures and google maps
+ * GLOBALS: HTMLHelper, map
  */
 
 
@@ -27,16 +28,122 @@ const Scriptures = (function () {
     const URL_BOOKS = `${URL_BASE}mapscrip/model/books.php`
     const URL_VOLUMES = `${URL_BASE}mapscrip/model/volumes.php`
     const URL_SCRIPTURES = `${URL_BASE}mapscrip/mapgetscrip.php`
+
+    const GEO_LOCATION_REGEX = /\((.*),'(.*)',(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),'(.*)'\)/
+    const GEO_LOCATION_INDEX_FLAG = 11
+    const GEO_LOCATION_INDEX_LATITUDE = 3
+    const GEO_LOCATION_INDEX_LONGITUDE = 4
+    const GEO_LOCATION_INDEX_PLACE_NAME = 2
+
     //--------------------------------------- Variables -----------------------------------
 
     // using state to keep track of the "state" of these varaibles in this module
     const state = {
         books: null, // array
-        volumes: null // array
+        volumes: null, // array
+        gmap_markers: []
     }
 
     // ----------------------------------- Functions --------------------------------------
-    const HTML = HTMLHelper // statuc class with helper functions 
+    // static class with helper functions 
+    const HTML = HTMLHelper 
+
+    const addMarker = function (place_name, lat, lng) {
+        // make sure these are floating values 
+        lat = Number(lat)
+        lng = Number(lng)
+
+        // remove duplicate
+        state.gmap_markers = state.gmap_markers.filter(marker => {
+            // we have a duplicate latitude and longitude
+            if (marker.position.lat() === lat && marker.position.lng() === lng) {
+                // and the name is the same 
+                if (marker.title === place_name) {
+                    // clear the marker 
+                    marker.setMap(null)
+                    // remove from this array 
+                    return false
+                }
+            }
+            // keep in this array 
+            return true
+        })
+
+        //  creat new marker and add to array of markers 
+        let marker = new google.maps.Marker({
+            position: { lat: lat, lng: lng },
+            map: map,
+            title: place_name,
+            animation: google.maps.Animation.DROP
+        })
+        state.gmap_markers.push(marker)
+    }
+
+    const clearMarkers = function () {
+        console.table(state.gmap_markers)
+
+        console.log(' clear markers ')
+
+        for (let i = 0; i < state.gmap_markers.length; i++) {
+            state.gmap_markers[i].setMap(null)
+        }
+
+        // state.gmap_markers = state.gmap_markers.map(marker => {
+        //     marker.setMap(null)
+        //     console.log(marker)
+        //     marker = null
+        // })
+
+        console.table(state.gmap_markers)
+
+        state.gmap_markers = []
+        console.table('markers array-->', state.gmap_markers)
+    }
+
+    const setUpMarkers = function () {
+        if (state.gmap_markers.length > 0) {
+            console.log('clear markers!!!')
+            clearMarkers()
+        }
+
+        document.querySelectorAll("a[onclick^=\"showLocation(\"]").forEach(element => {
+            let matches = GEO_LOCATION_REGEX.exec(element.getAttribute('onclick'))
+
+            if (matches) {
+                let place_name = matches[GEO_LOCATION_INDEX_PLACE_NAME]
+                let lat = matches[GEO_LOCATION_INDEX_LATITUDE]
+                let lng = matches[GEO_LOCATION_INDEX_LONGITUDE]
+                let flag = matches[GEO_LOCATION_INDEX_FLAG]
+
+                if (flag !== '') {
+                    place_name = `${place_name} ${flag}`
+                }
+                addMarker(place_name, lat, lng)
+            }
+        })
+    }
+
+    const showLocation = function (
+        geotagId,
+        placename,
+        latitude,
+        longitude,
+        viewLatitude,
+        viewLongitude,
+        viewTilt,
+        viewRoll,
+        viewAltitude,
+        viewHeading
+    ) {
+        // clearMarkers()
+        console.log('show location', latitude, longitude)
+        let lat = Number(latitude)
+        let lng = Number(longitude)
+        const latLng = new google.maps.LatLng({ lat, lng })
+        map.setCenter(latLng)
+        // addMarker(placename, latitude, longitude)
+        console.log(state.gmap_markers.map(x => x.title))
+    }
 
     const booksGrid = function (volume) {
         return HTML.div({
@@ -181,7 +288,7 @@ const Scriptures = (function () {
         }
     }
 
-    const prevChapter = function(book_id, chapter_num){
+    const prevChapter = function (book_id, chapter_num) {
         let book = state.books[book_id]
         if (book !== undefined) {
             // looking for next chapter in book
@@ -226,8 +333,10 @@ const Scriptures = (function () {
 
     const getScripturesCallback = function (html) {
         document.getElementById(DIV_SCRIPTURES).innerHTML = html
+        setUpMarkers()
 
-        // TODO: setupMapMarkers()
+        console.log(state.gmap_markers)
+        console.log(state.gmap_markers.sort((a, b) => a.title - b.title).map(c => c.title))
     }
 
     const getScripturesFailure = function (data) {
@@ -275,8 +384,6 @@ const Scriptures = (function () {
             callback(state.volumes)
             // show the home options 
 
-            console.log(nextChapter(101,49))
-            console.log(prevChapter(101,1))
         }
     }
 
@@ -351,8 +458,10 @@ const Scriptures = (function () {
     }
 
     return {
-        init: init,
-        onHashChange: onHashChange
+        init,
+        onHashChange,
+        showLocation,
+        clearMarkers,
     }
 }())
 

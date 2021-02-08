@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="This is homework number 5">
     <meta name="author" content="Elijah Allen">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
     <title>Homework 5</title>
@@ -19,6 +20,7 @@
 </head>
 
 <body>
+
     <div class="container">
         <div id="header">
             <div id="center-head">
@@ -26,6 +28,8 @@
                     The Scriptures Mapped
                 </div>
                 <div id="subtitle">Elijah Allen</div>
+                <button onclick="Scriptures.clearMarkers()">reset</button>
+
             </div>
         </div>
         <div id="content" class="row ">
@@ -34,22 +38,29 @@
                 <!-- volumes grid -->
                 <div id="scriptures"></div>
                 <!-- for each volume repeat the following -->
-                <!-- <div class="volume">
-                    <a name='v1'></a>
-                    <h5>Old Testament</h5>
-                </div> -->
+
                 <div id="text">
-                    
+
                 </div>
             </div>
             <div id="map" class="col-75"></div>
         </div>
     </div>
 
-
     <!-- Call this script to get data -->
     <script>
         // load the data and pass it to main when ready
+        let map
+        let showLocation
+        function initMap() {
+            console.log('init map')
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 31.7683, lng: 35.2137 },
+                zoom: 8,
+                mapTypeId: 'terrain'
+            });
+        }
+
         function ready(fn) {
             if (document.readyState != 'loading') {
                 fn();
@@ -58,11 +69,17 @@
             }
         }
 
+
         ready(function () {
-            Scriptures.init(()=>Scriptures.onHashChange())
+            Scriptures.init(() => Scriptures.onHashChange())
+            showLocation = Scriptures.showLocation
             window.addEventListener("hashchange", Scriptures.onHashChange)
         })
     </script>
+
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3AJ0B3HGnnzfwQqnqnTz77bs5ZQFucmA&callback=initMap">
+        </script>
 
 </body>
 
