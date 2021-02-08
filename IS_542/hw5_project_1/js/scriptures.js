@@ -3,9 +3,11 @@
  * AUTHOR:  Elijah Allen
  * DATE:    Winter 2021
  * 
- * DESCRIPTION: Forntend web dev IS452 Scriptures and google maps
+ * DESCRIPTION: Forntend web dev IS 452 Scriptures and google maps
  * GLOBALS: HTMLHelper, map
- */
+ *
+ * 
+ ===============================================================================*/
 
 
 const Scriptures = (function () {
@@ -46,7 +48,7 @@ const Scriptures = (function () {
 
     // ----------------------------------- Functions --------------------------------------
     // static class with helper functions 
-    const HTML = HTMLHelper 
+    const HTML = HTMLHelper // addess: ./HTMLHelper.js
 
     const addMarker = function (place_name, lat, lng) {
         // make sure these are floating values 
@@ -210,28 +212,40 @@ const Scriptures = (function () {
 
         if (hash.length <= 0) {
             navigateHome()
+            return
         } else if (id_array.length === 1) {
             let volume_id = Number(id_array[0]) // convert id_array[0] from str to num
 
             if (volume_id < state.volumes[0].id || volume_id > state.volumes.slice(-1)[0].id) {
                 navigateHome()
+                return
             } else {
                 navigateHome(volume_id)
+                return
             }
         } else {
             let book_id = Number(id_array[1])
             console.log('----', state.books[book_id])
             if (state.books[book_id] === undefined) {
                 navigateHome()
+                return
             } else {
                 if (id_array.length === 2) {
                     // Somthing should happen here but i do not know what 
                 } else {
                     let chapter = Number(id_array[2])
                     // video part 6 -- 6:53 time in
-                    navigateChapter(book_id, chapter)
+                    if(chapter > state.books[book_id].numChapters){
+                        console.error('chapter out or range')
+                        navigateHome()
+                        return
+                    }else{
+                        navigateChapter(book_id, chapter)
+                        return
+                    }
                 }
                 navigateBook(book_id)
+                return
             }
         }
 
@@ -444,6 +458,7 @@ const Scriptures = (function () {
     const volumesGridContent = function (volume_id) {
         let grid_content = ''
         state.volumes.forEach(volume => {
+            //  show all volumes            show one volume
             if (volume_id === undefined || volume_id === volume.id) {
                 grid_content += HTML.div({
                     class_name: CLASS_VOLUMES,
