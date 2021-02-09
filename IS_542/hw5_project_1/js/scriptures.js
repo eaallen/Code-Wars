@@ -4,7 +4,7 @@
  * DATE:    Winter 2021
  * 
  * DESCRIPTION: Forntend web dev IS 452 Scriptures and google maps
- * GLOBALS: HTMLHelper, map
+ * GLOBALS: HTMLHelper, map, MarkerWithLabel
  *
  * 
  ===============================================================================*/
@@ -72,12 +72,23 @@ const Scriptures = (function () {
         })
 
         //  creat new marker and add to array of markers 
-        let marker = new google.maps.Marker({
+        // let marker = new google.maps.Marker({
+        //     position: { lat: lat, lng: lng },
+        //     map: map,
+        //     title: place_name,
+        //     animation: google.maps.Animation.DROP
+        // })
+        const label_text = place_name.replace(/[<>~]/, '')
+        let marker = new MarkerWithLabel({
             position: { lat: lat, lng: lng },
             map: map,
+            labelContent: label_text, // can also be HTMLElement
+            labelAnchor: new google.maps.Point(((label_text.length / 2) * -10), 3),
+            labelClass: "labels", // the CSS class for the label
+            labelStyle: { opacity: 1.0 },
             title: place_name,
-            animation: google.maps.Animation.DROP
         })
+
         state.gmap_markers.push(marker)
     }
 
@@ -90,16 +101,7 @@ const Scriptures = (function () {
             state.gmap_markers[i].setMap(null)
         }
 
-        // state.gmap_markers = state.gmap_markers.map(marker => {
-        //     marker.setMap(null)
-        //     console.log(marker)
-        //     marker = null
-        // })
-
-        console.table(state.gmap_markers)
-
         state.gmap_markers = []
-        console.table('markers array-->', state.gmap_markers)
     }
 
     const setUpMarkers = function () {
@@ -123,6 +125,8 @@ const Scriptures = (function () {
                 addMarker(place_name, lat, lng)
             }
         })
+
+       
     }
 
     const showLocation = function (
@@ -137,14 +141,32 @@ const Scriptures = (function () {
         viewAltitude,
         viewHeading
     ) {
-        // clearMarkers()
-        console.log('show location', latitude, longitude)
-        let lat = Number(latitude)
-        let lng = Number(longitude)
+
+
+        const lat = Number(latitude)
+        const lng = Number(longitude)
+        const alt = Number(viewAltitude)
+
         const latLng = new google.maps.LatLng({ lat, lng })
+        console.log(alt, '<---')
+
+        let zoom_level = 0
+        switch (alt) {
+            case '<':
+                
+                map.setZoom(10)
+                break
+            case '>':
+                map.setZoom(6)
+                break
+            case '~':
+                map.setZoom(8)
+                break
+            default:
+                map.setZoom(12)
+                break
+        }
         map.setCenter(latLng)
-        // addMarker(placename, latitude, longitude)
-        console.log(state.gmap_markers.map(x => x.title))
     }
 
     const booksGrid = function (volume) {
@@ -235,11 +257,11 @@ const Scriptures = (function () {
                 } else {
                     let chapter = Number(id_array[2])
                     // video part 6 -- 6:53 time in
-                    if(chapter > state.books[book_id].numChapters){
+                    if (chapter > state.books[book_id].numChapters) {
                         console.error('chapter out or range')
                         navigateHome()
                         return
-                    }else{
+                    } else {
                         navigateChapter(book_id, chapter)
                         return
                     }
@@ -267,13 +289,14 @@ const Scriptures = (function () {
     const navigateChapter = function (book_id, chapter_id) {
         ajax(
             encodedScripturesUrlParams(book_id, chapter_id),
-            getScripturesCallback,
+            html => getScripturesCallback(html, book_id, chapter_id),
             getScripturesFailure,
             true
         )
     }
 
     const nextChapter = function (book_id, chapter_num) {
+        console.log('next chapter!')
         let book = state.books[book_id]
         if (book !== undefined) {
             // looking for next chapter in book
@@ -303,6 +326,7 @@ const Scriptures = (function () {
     }
 
     const prevChapter = function (book_id, chapter_num) {
+        console.log('prev chapter')
         let book = state.books[book_id]
         if (book !== undefined) {
             // looking for next chapter in book
@@ -345,12 +369,35 @@ const Scriptures = (function () {
         }
     }
 
-    const getScripturesCallback = function (html) {
-        document.getElementById(DIV_SCRIPTURES).innerHTML = html
+    const getScripturesCallback = function (html, book_id, chapter_id) {
+        const [next_book_id, next_chapter_value, next_title] = nextChapter(book_id, chapter_id)
+        const [prev_book_id, prev_chapter_value, prev_title] = prevChapter(book_id, chapter_id)
+
+        document.getElementById(DIV_SCRIPTURES).innerHTML = `
+        <div class="chapter-nav">
+            <div id="prev_btn" class="chapter-nav-btn" title="${prev_title}"> ${HTML.hashLink(`0:${prev_book_id}:${prev_chapter_value}`, 'Back')
+            } </div> 
+            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${HTML.hashLink(`0:${next_book_id}:${next_chapter_value}`, 'Next')
+            } </div> 
+        </div>
+        ${html}
+        `
+
         setUpMarkers()
 
-        console.log(state.gmap_markers)
-        console.log(state.gmap_markers.sort((a, b) => a.title - b.title).map(c => c.title))
+        if(state.gmap_markers.length >0){
+            
+            let bounds = new google.maps.LatLngBounds();
+            for (const marker of state.gmap_markers) {
+                loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+                bounds.extend(loc);
+            }
+            map.fitBounds(bounds);
+        }
+    }
+
+    const changeHash = function (hash_string) {
+        window.location.hash = `#${hash_string}`
     }
 
     const getScripturesFailure = function (data) {
@@ -476,7 +523,6 @@ const Scriptures = (function () {
         init,
         onHashChange,
         showLocation,
-        clearMarkers,
     }
 }())
 

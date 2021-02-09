@@ -54,7 +54,8 @@ class HTMLHelper {
     }
 
     static hashLink(hash_args, content) {
-        return `<a href="javascript:void(o)" onclick="changeHash(${hash_args})">
+        // onclick="window.location.hash = '#${hash_args}'"
+        return `<a href="#${hash_args}" >
         ${content}
         </a>`
     }
