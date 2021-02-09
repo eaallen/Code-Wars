@@ -4,7 +4,7 @@
  * DATE:    Winter 2021
  * 
  * DESCRIPTION: Forntend web dev IS 452 Scriptures and google maps
- * GLOBALS: HTMLHelper, map, MarkerWithLabel
+ * GLOBALS: HTMLHelper, map, MarkerWithLabel, UI
  *
  * 
  ===============================================================================*/
@@ -17,6 +17,8 @@ const Scriptures = (function () {
     const CLASS_BUTTON_LINK = 'btn-link'
     const CLASS_CHAPTER = 'chapter'
     const CLASS_VOLUMES = 'volume'
+    const CLASS_ACCORDIAN = 'accordion'
+    const CLASS_PANEL_FOR_ACCORDIAN = 'panel-for-accordian'
 
     const DIV_SCRIPTURE_NAVIGATOR = 'scripnav'
     const DIV_SCRIPTURES = 'scriptures'
@@ -150,14 +152,14 @@ const Scriptures = (function () {
 
         // find the current zoom level, zoom in if level is higher than expected 
         let zoom_level = 0
-        switch (alt) {
+        switch (viewHeading) {
             // small area
             case '<':
                 map.setZoom(10)
                 break
             // large area
             case '>':
-                map.setZoom(6)
+                map.setZoom(3)
                 break
             //    general area
             case '~':
@@ -174,7 +176,7 @@ const Scriptures = (function () {
     // generates a grid for the books 
     const booksGrid = function (volume) {
         return HTML.div({
-            class_name: CLASS_BOOKS,
+            class_name: `${CLASS_BOOKS} ${CLASS_PANEL_FOR_ACCORDIAN}`,
             content: booksGridContent(volume)
         })
     }
@@ -333,6 +335,7 @@ const Scriptures = (function () {
     const prevChapter = function (book_id, chapter_num) {
         console.log('prev chapter')
         let book = state.books[book_id]
+        console.log('book -->', book)
         if (book !== undefined) {
             // looking for next chapter in book
             if (chapter_num > 1) {
@@ -375,18 +378,24 @@ const Scriptures = (function () {
     }
 
     const getScripturesCallback = function (html, book_id, chapter_id) {
-        const [next_book_id, next_chapter_value, next_title] = nextChapter(book_id, chapter_id)
-        const [prev_book_id, prev_chapter_value, prev_title] = prevChapter(book_id, chapter_id)
+        const [next_book_id, next_chapter_value, next_title] = nextChapter(book_id, chapter_id) ||
+            [false, false, false]
+        const [prev_book_id, prev_chapter_value, prev_title] = prevChapter(book_id, chapter_id) ||
+            [false, false, false]
 
-        document.getElementById(DIV_SCRIPTURES).innerHTML = `
+        const back_to_volumes = HTML.hashLink('0','Volumes')
+        document.getElementById(DIV_SCRIPTURES).innerHTML = (prev_book_id ? `
         <div class="chapter-nav">
-            <div id="prev_btn" class="chapter-nav-btn" title="${prev_title}"> ${HTML.hashLink(`0:${prev_book_id}:${prev_chapter_value}`, 'Back')
-            } </div> 
-            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${HTML.hashLink(`0:${next_book_id}:${next_chapter_value}`, 'Next')
-            } </div> 
-        </div>
-        ${html}
-        `
+            <div id="prev_btn" class="chapter-nav-btn" title="${prev_title}"> ${HTML.hashLink(
+            `0:${prev_book_id}:${prev_chapter_value}`,
+            'Back'
+        )} </div> ` : back_to_volumes) + (next_book_id ? `
+            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${HTML.hashLink(
+            `0:${next_book_id}:${next_chapter_value}`,
+            'Next'
+        )} </div> 
+        </div>`: back_to_volumes) + `${html}`
+               
 
         setUpMarkers()
 
@@ -433,6 +442,8 @@ const Scriptures = (function () {
             id: DIV_SCRIPTURE_NAVIGATOR,
             content: volumesGridContent(volume_id)
         })
+
+        UI.accordian(CLASS_ACCORDIAN)
     }
 
     const cacheBooks = function (callback) {
@@ -513,7 +524,7 @@ const Scriptures = (function () {
             //  show all volumes            show one volume
             if (volume_id === undefined || volume_id === volume.id) {
                 grid_content += HTML.div({
-                    class_name: CLASS_VOLUMES,
+                    class_name: `${CLASS_VOLUMES} ${CLASS_ACCORDIAN}`,
                     content: HTML.anchor(volume) +
                         HTML.element(TAG_HEADER_5, volume.fullName)
                 })
@@ -521,6 +532,7 @@ const Scriptures = (function () {
             }
         }
         )
+
         return grid_content
     }
 

@@ -1,90 +1,36 @@
-class UI {
-    ui = {
-        div: null,
-        p: null,
-        ol: null,
-        ul: null,
-        li: null,
-        a: null,
-    }
+const UI = function () {
 
-    state = {
-        DOM: {},
-        master: {
-            node: null,
-            id: null
-        },
-    }
+    const accordian = function (id) {
+        // https://www.w3schools.com/howto/howto_js_accordion.asp
 
-    constructor(master_div_id) {
-        // createing the parent div
-        this.state.master.div = document.getElementById(master_div_id)
-        this.state.master.id = master_div_id
-        this.state.DOM[master_div_id] = []
+        let acc = document.getElementsByClassName(id);
+        let i;
 
-        // DOM creating functions 
-        for (const key of Object.keys(this.ui)) {
-            this.ui[key] = (id, class_name, inner_html = '', eventHandler = null) => {
-                // create element
-                const element = document.createElement(key)
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                /* Toggle between adding and removing the "active" class,
+                to highlight the button that controls the panel */
+                console.log(this)
+                this.classList.toggle("active");
 
-
-                // add class name
-                element.setAttribute('class', class_name ? class_name : `${master_div_id} ${master_div_id}-${key}`)
-
-                // add eventListener
-                if (eventHandler && eventHandler.name && eventHandler.method) {
-                    element.addEventListener(eventHandler.name, eventHandler.method, false)
+                /* Toggle between hiding and showing the active panel */
+                let panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
                 }
-
-                element.innerHTML = inner_html
-
-                // add ID
-                if (id) {
-                    element.setAttribute('id', id)
-                    this.state.DOM[id] = element
-                }
-
-                return element
-            }
+            });
         }
     }
 
-    pushElement(parent_node_id, tag_name, id, class_name, inner_html, eventHandler) {
-        const element = this.ui[tag_name](id, class_name, inner_html, eventHandler)
-        this.appendChild(parent_node_id, element)
-    }
-
-    // can only append nodes that have ID's
-    appendChild(parent_node_id, element) {
-        if (parent_node_id) {
-            document.getElementById(parent_node_id).appendChild(element)
-        } else {
-            this.state.master.div.appendChild(element)
-        }
-
-    }
-
-    // remove any child in parent node
-    removeChild = (parent_node_id, child) => {
-        if (parent_node_id) {
-            document.getElementById(parent_node_id).removeChild(child)
-        } else {
-            this.state.master.div.removeChild(child)
-        }
-    }
-
-    // remove last child in parent node
-    popChild(parent_node_id) {
-        const select = parent_node_id ? document.getElementById(parent_node_id) : this.state.master.div
-        select.removeChild(select.lastChild)
-    }
-
-    // remove first child in parent node
-    shiftChild(parent_node_id) {
-        const select = parent_node_id ? document.getElementById(parent_node_id) : this.state.master.div
-        select.removeChild(select.firstChild)
+    const init = function () {
+        accordian()
     }
 
 
-}
+    return {
+        init,
+        accordian
+    }
+}()

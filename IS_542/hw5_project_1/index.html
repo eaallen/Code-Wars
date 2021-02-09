@@ -32,6 +32,11 @@
         </div>
         <div id="content" class="row ">
             <div id="scripture_viewer" class="column col-25 ">
+                <ul class="breadcrumb" id="nav_breadcrumb">
+                    <li><a id="breadcrumb_volume" href="#0">Volumes</a></li>
+                    <li><a id="breadcrumb_book" href="#">[Book Name]</a></li>
+                    <li id="breadcrumb_chapter">chapter [number]</li>
+                </ul>
                 <div id="navigator"></div>
                 <!-- volumes grid -->
                 <div id="scriptures"></div>
@@ -72,6 +77,8 @@
             Scriptures.init(() => Scriptures.onHashChange())
             showLocation = Scriptures.showLocation
             window.addEventListener("hashchange", Scriptures.onHashChange)
+
+
         })
     </script>
 
@@ -81,7 +88,6 @@
 
     <!-- MarkerWithLabel, allows me to give markers lables: https://github.com/googlemaps/js-markerwithlabel -->
     <script src="https://unpkg.com/@googlemaps/markerwithlabel/dist/index.min.js"></script>
-
 </body>
 
 </html>
