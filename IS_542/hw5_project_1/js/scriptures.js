@@ -126,7 +126,7 @@ const Scriptures = (function () {
             }
         })
 
-       
+
     }
 
     const showLocation = function (
@@ -141,27 +141,29 @@ const Scriptures = (function () {
         viewAltitude,
         viewHeading
     ) {
-
-
+        // convert strings to numbers
         const lat = Number(latitude)
         const lng = Number(longitude)
         const alt = Number(viewAltitude)
 
         const latLng = new google.maps.LatLng({ lat, lng })
-        console.log(alt, '<---')
 
+        // find the current zoom level, zoom in if level is higher than expected 
         let zoom_level = 0
         switch (alt) {
+            // small area
             case '<':
-                
                 map.setZoom(10)
                 break
+            // large area
             case '>':
                 map.setZoom(6)
                 break
+            //    general area
             case '~':
                 map.setZoom(8)
                 break
+            // city
             default:
                 map.setZoom(12)
                 break
@@ -169,6 +171,7 @@ const Scriptures = (function () {
         map.setCenter(latLng)
     }
 
+    // generates a grid for the books 
     const booksGrid = function (volume) {
         return HTML.div({
             class_name: CLASS_BOOKS,
@@ -207,6 +210,7 @@ const Scriptures = (function () {
         let grid_content = ''
         let chapter = 1
 
+        // loops for all chapters in book
         while (chapter <= book.numChapters) {
             grid_content += HTML.div({
                 class_name: CLASS_BUTTON,
@@ -222,8 +226,10 @@ const Scriptures = (function () {
         return grid_content
     }
 
+
+    //  use the url hash as state management. we store important data in the url hash and read it when it changes to 
+    //  to render the rest of the app. 
     const onHashChange = function () {
-        console.log('on hash change')
         const id_array = []
         const location = window.location
         const hash = location.hash
@@ -232,6 +238,7 @@ const Scriptures = (function () {
             id_array.push(...hash.slice(1).split(":"))
         }
 
+        // state management 
         if (hash.length <= 0) {
             navigateHome()
             return
@@ -256,9 +263,7 @@ const Scriptures = (function () {
                     // Somthing should happen here but i do not know what 
                 } else {
                     let chapter = Number(id_array[2])
-                    // video part 6 -- 6:53 time in
                     if (chapter > state.books[book_id].numChapters) {
-                        console.error('chapter out or range')
                         navigateHome()
                         return
                     } else {
@@ -385,8 +390,8 @@ const Scriptures = (function () {
 
         setUpMarkers()
 
-        if(state.gmap_markers.length >0){
-            
+        if (state.gmap_markers.length > 0) {
+
             let bounds = new google.maps.LatLngBounds();
             for (const marker of state.gmap_markers) {
                 loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
