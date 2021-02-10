@@ -21,6 +21,7 @@
  ===============================================================================*/
 
 
+
 const Scriptures = (function () {
     // ------------------------------------- Constants -----------------------------------
     const CLASS_BOOKS = 'books'
@@ -201,20 +202,7 @@ const Scriptures = (function () {
         lng = Number(lng)
 
         // remove duplicate
-        state.gmap_markers = state.gmap_markers.filter(marker => {
-            // we have a duplicate latitude and longitude
-            if (marker.position.lat() === lat && marker.position.lng() === lng) {
-                // and the name is the same 
-                if (marker.title === place_name) {
-                    // clear the marker 
-                    marker.setMap(null)
-                    // remove from this array 
-                    return false
-                }
-            }
-            // keep in this array 
-            return true
-        })
+
         //  creat new marker and add to array of markers 
         const label_text = place_name.replace(/[<>~?]/, '')
         let marker = new MarkerWithLabel({
@@ -270,9 +258,42 @@ const Scriptures = (function () {
                 addMarker(place_name, lat, lng)
             }
         })
+        // filter markers, remove duplicates
+        uniqueMarkers()
     }
 
+    const uniqueMarkers = function () {
+        let j = {}
+        for (const marker of state.gmap_markers) {
+            const lat = marker.position.lat()
+            const lng = marker.position.lng()
+            const labelContent = marker.labelContent
+            if (j[`${lat}:${lng}`]) {
+                if (!j[`${lat}:${lng}`].labelContent.includes(labelContent)) {
+                    console.log('filter succes')
 
+                    let label = j[`${lat}:${lng}`].labelContent + `, ${labelContent}`
+
+                    j[`${lat}:${lng}`].setMap(null)
+
+                    j[`${lat}:${lng}`] = new MarkerWithLabel({
+                        position: { lat: lat, lng: lng },
+                        map: map,
+                        labelContent: label, // can also be HTMLElement
+                        labelAnchor:
+                            new google.maps.Point(((labelContent.length / 2) * -10), 3),
+                        labelClass: CLASS_MAP_LABELS, // the CSS class for the label
+                        labelStyle: { opacity: 1.0 },
+                        title: this.labelContent,
+                    })
+                }
+                marker.setMap(null)
+            } else {
+                j[`${lat}:${lng}`] = marker
+            }
+        }
+        state.gmap_markers = Object.keys(j).map(key => j[key])
+    }
 
     // ---------------------------------- Navigation Hanlers ------------------------------
     // Navigates to the Home View
