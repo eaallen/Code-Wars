@@ -263,6 +263,7 @@ const Scriptures = (function () {
     }
 
     const uniqueMarkers = function () {
+        // https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
         let j = {}
         for (const marker of state.gmap_markers) {
             const lat = marker.position.lat()
