@@ -54,6 +54,7 @@ const Scriptures = (function () {
 
     const GEO_LOCATION_REGEX = /\((.*),'(.*)',(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),'(.*)'\)/
     const GEO_LOCATION_INDEX_FLAG = 11
+    const GEO_LOCATION_INDEX_ALTITUDE = 9
     const GEO_LOCATION_INDEX_LATITUDE = 3
     const GEO_LOCATION_INDEX_LONGITUDE = 4
     const GEO_LOCATION_INDEX_PLACE_NAME = 2
@@ -177,7 +178,6 @@ const Scriptures = (function () {
             }
         } else {
             let book_id = Number(id_array[1])
-            console.log('----', state.books[book_id])
             if (state.books[book_id] === undefined) {
                 navigateHome()
                 return
@@ -245,7 +245,6 @@ const Scriptures = (function () {
     const setUpMarkers = function () {
         // clear existing markers
         if (state.gmap_markers.length > 0) {
-            console.log('clear markers!!!')
             clearMarkers()
         }
         // add a marker for each link that calles the "showLocation" method in the chapter contents
@@ -257,6 +256,7 @@ const Scriptures = (function () {
                 let lat = matches[GEO_LOCATION_INDEX_LATITUDE]
                 let lng = matches[GEO_LOCATION_INDEX_LONGITUDE]
                 let flag = matches[GEO_LOCATION_INDEX_FLAG]
+
 
                 if (flag !== '') {
                     place_name = `${place_name} ${flag}`
@@ -278,19 +278,17 @@ const Scriptures = (function () {
             const labelContent = marker.labelContent
             if (j[`${lat}:${lng}`]) {
                 if (!j[`${lat}:${lng}`].labelContent.includes(labelContent)) {
-                    console.log('filter succes')
-
-                    let label = j[`${lat}:${lng}`].labelContent + `, ${labelContent}`
+                    let label = `${j[`${lat}:${lng}`].labelContent}| ${labelContent}`
 
                     j[`${lat}:${lng}`].setMap(null)
 
                     j[`${lat}:${lng}`] = new MarkerWithLabel({
                         position: { lat: lat, lng: lng },
                         map: map,
-                        labelContent: label, // can also be HTMLElement
+                        labelContent: label,
                         labelAnchor:
                             new google.maps.Point(((label.length / 2) * -10), 3),
-                        labelClass: CLASS_MAP_LABELS, // the CSS class for the label
+                        labelClass: CLASS_MAP_LABELS,
                         labelStyle: { opacity: 1.0 },
                         title: label,
                     })
@@ -470,9 +468,7 @@ const Scriptures = (function () {
     // gets the info for the previous chapter / book in the volume
     // returns null if there are no more books or chapters
     const prevChapter = function (book_id, chapter_num) {
-        console.log('prev chapter')
         let book = state.books[book_id]
-        console.log('book -->', book)
         if (book !== undefined) {
             // looking for next chapter in book
             if (chapter_num > 1) {
@@ -552,7 +548,15 @@ const Scriptures = (function () {
 
         const latLng = new google.maps.LatLng({ lat, lng })
 
-        // set the zoom level depending on the altitude 
+        zoomMapWithAltitude(alt)
+
+        // show the marker in the center of the map
+        map.setCenter(latLng)
+    }
+
+    const zoomMapWithAltitude = function (alt) {
+        alt = Number(alt)
+        // set the zoom level depending on the altitude
         if (alt >= 5000) {
             map.setZoom(12)
         } else if (alt >= 2000) {
@@ -560,11 +564,7 @@ const Scriptures = (function () {
         } else {
             map.setZoom(17)
         }
-
-        // show the marker in the center of the map
-        map.setCenter(latLng)
     }
-
 
     // ------------------------ Initalization and Getting Data -----------------------------
     // combines books with thier propper volume
