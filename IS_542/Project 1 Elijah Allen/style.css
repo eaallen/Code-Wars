@@ -1,0 +1,227 @@
+html, body {
+    height: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+body {
+    font-family: Arial;
+    margin: 0;
+}
+
+#content {
+    height: 100%;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#header {
+    text-align: center;
+    background: #01447e;
+    height: 4rem;
+    color: #fff;
+}
+
+#map {
+    background-color: antiquewhite;
+}
+
+#scripture_viewer {
+    background-color: #d3d2d2;
+    /* padding: 2rem; */
+    padding-left: .5rem;
+    padding-right: .5rem;
+    max-height: 100%;
+    overflow-y: scroll;
+}
+
+#scripnav {
+    background-color: #d3d2d2;
+}
+
+#subtitle {}
+
+#text {
+    overflow-y: scroll;
+    max-height: 40rem;
+}
+
+#title {
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+}
+
+#breadcrumb_chapter {
+    visibility: hidden;
+}
+
+#breadcrumb_book {
+    visibility: hidden;
+}
+
+.books {}
+
+.test-flex {
+    flex: 3;
+}
+
+.btn {
+    background-color: #eee;
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+    max-width: 6rem;
+    color: #01447e;
+}
+
+.btn-link {
+    text-decoration: none;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+}
+
+.col-75 {
+    flex: 75%;
+}
+
+.col-25 {
+    flex: 25%;
+}
+
+.shadow {
+    -moz-box-shadow: inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+    box-shadow: inset 0 0 10px #000000;
+}
+
+.scripturecontent{
+    padding: .5rem;
+    background-color: #fff;
+}
+
+.labels {
+    color: #ffffff;
+    font-weight: bolder;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    background-color: #00000057;
+    padding: 3px;
+}
+
+/* The Accordian styles are from w3Schools.com */
+
+/* Style the buttons that are used to open and close the accordion panel */
+
+.accordion {
+    background-color: #01447e;
+    color: #fff;
+    cursor: pointer;
+    padding: 1rem;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+
+.active, .accordion:hover {
+    background-color: #0368c0;
+    /*color: #fff; */
+    /* box-shadow: 5px 10px #888888; */
+}
+
+/* Style the accordion panel. Note: hidden by default */
+
+.panel-for-accordian {
+    padding: 0 18px;
+    background-color: #ffffffd3;
+    display: none;
+    overflow: hidden;
+}
+
+.versesblock ul{
+    padding-inline-start: 20px !important;
+}
+
+.versesblock li {
+    list-style-type: none;
+}
+
+/* BREADCRUMB (w3Schools.com)*/
+
+/* Style the list */
+
+ul.breadcrumb {
+    padding: 10px 16px;
+    list-style: none;
+    background-color: #eee;
+}
+
+/* Display list items side by side */
+
+ul.breadcrumb li {
+    display: inline;
+    font-size: 18px;
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+
+ul.breadcrumb li+li:before {
+    padding: 8px;
+    color: black;
+    content: "/\00a0";
+}
+
+/* Add a color to all links inside the list */
+
+ul.breadcrumb li a {
+    color: #0275d8;
+    text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+
+ul.breadcrumb li a:hover {
+    color: #01447e;
+    text-decoration: underline;
+}
+
+.chapter-nav {
+    vertical-align: middle;
+    text-align: right;
+    margin-bottom: 1rem;
+}
+
+.chapter-nav-btn {
+    display: inline;
+}
+
+#prev_btn {
+    margin-right: 2rem;
+}
+
+#outer {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+#inner_fixed {
+    height: 100px;
+    background-color: grey;
+}
+
+#inner_remaining {
+    background-color: #DDDDDD;
+    flex-grow: 1;
+}

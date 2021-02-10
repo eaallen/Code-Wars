@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This is homework number 5">
+    <meta name="author" content="Elijah Allen">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <title>Homework 5</title>
+    <!-- Use Strict -->
+    <script src="./strict.js"></script>
+    <!-- Other JS files  -->
+    <script src="./js/ui.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/HTMLHelper.js"></script>
+    <script src="./js/scriptures.js"></script>
+</head>
+
+<body>
+    <!-- TODO: add invisbale marker for jerusleam so it will all ways be in the map -->
+    <div class="container" id="outer">
+        <div id="header">
+            <div id="center-head">
+                <div id="title">
+                    The Scriptures Mapped
+                </div>
+                <div id="subtitle">Elijah Allen</div>
+            </div>
+        </div>
+        <div id="inner_remaining">
+            <div id="content" class="row ">
+                <div id="scripture_viewer" class="column col-25 ">
+                    <ul class="breadcrumb" id="nav_breadcrumb">
+                        <li><a id="breadcrumb_volume" href="#0">Volumes</a></li>
+                        <li><a id="breadcrumb_book" href="#"></a></li>
+                        <li id="breadcrumb_chapter"></li>
+                    </ul>
+                    <div id="navigator"></div>
+                    <!-- volumes grid -->
+                    <div id="scriptures"></div>
+                    <!-- for each volume repeat the following -->
+
+                    <div id="text">
+
+                    </div>
+                </div>
+                <div id="map" class="col-75"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call this script to get data -->
+    <script>
+        // load the data and pass it to main when ready
+        let map
+        let showLocation
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 31.7683, lng: 35.2137 },
+                zoom: 8,
+                mapTypeId: 'terrain'
+            });
+        }
+
+        function ready(fn) {
+            if (document.readyState != 'loading') {
+                fn();
+            } else {
+                document.addEventListener('DOMContentLoaded', fn);
+            }
+        }
+
+
+        ready(function () {
+            Scriptures.init(() => Scriptures.onHashChange())
+            showLocation = Scriptures.showLocation
+            window.addEventListener("hashchange", Scriptures.onHashChange)
+
+            // seeting the max height for the scripture viewer
+            // this allows for dynamic overflow-scroll
+            const b = UI.getElementYDimesionById('map')
+            UI.setElementYDimesionsById('scripture_viewer',`${b}px`)
+
+            // set the max height with the onchange, this is currently a little buggy
+            window.addEventListener('resize', () => {
+                const size = UI.getElementYDimesionById('map')
+                UI.setElementYDimesionsById('scripture_viewer', `${size}px`)
+            })
+
+        })
+    </script>
+
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3AJ0B3HGnnzfwQqnqnTz77bs5ZQFucmA&callback=initMap">
+        </script>
+
+    <!-- MarkerWithLabel, allows me to give markers lables: https://github.com/googlemaps/js-markerwithlabel -->
+    <script src="https://unpkg.com/@googlemaps/markerwithlabel/dist/index.min.js"></script>
+</body>
+
+</html>
