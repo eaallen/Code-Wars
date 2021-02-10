@@ -4,11 +4,13 @@
  * DATE:    Winter 2021
  * 
  * DESCRIPTION: Forntend web dev IS 452 Scriptures and google maps
+ * 
  * GLOBALS: 
  *  <object> HTMLHelper - static methods for creating html elements, 
  *  <object> map - google map object
  *  <object> MarkerWithLabel - marker for map, 
  *  <object> UI - handles UI spesific logic (accordian and div size), 
+ * 
  * TABLE OF CONTENTS:
  *  1. Constants
  *  2. Full Scope Module Wide Variables
