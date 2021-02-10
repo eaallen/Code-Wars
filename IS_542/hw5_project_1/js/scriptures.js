@@ -269,8 +269,8 @@ const Scriptures = (function () {
     }
 
     const uniqueMarkers = function () {
+        // this gets unique elelemts using an object (j)
         // https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
-        
         let j = {}
         for (const marker of state.gmap_markers) {
             const lat = marker.position.lat()
@@ -289,10 +289,10 @@ const Scriptures = (function () {
                         map: map,
                         labelContent: label, // can also be HTMLElement
                         labelAnchor:
-                            new google.maps.Point(((labelContent.length / 2) * -10), 3),
+                            new google.maps.Point(((label.length / 2) * -10), 3),
                         labelClass: CLASS_MAP_LABELS, // the CSS class for the label
                         labelStyle: { opacity: 1.0 },
-                        title: this.labelContent,
+                        title: label,
                     })
                 }
                 marker.setMap(null)
