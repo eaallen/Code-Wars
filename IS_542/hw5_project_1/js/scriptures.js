@@ -4,7 +4,11 @@
  * DATE:    Winter 2021
  * 
  * DESCRIPTION: Forntend web dev IS 452 Scriptures and google maps
- * GLOBALS: HTMLHelper, map, MarkerWithLabel, UI
+ * GLOBALS: 
+ *  <object> HTMLHelper - static methods for creating html elements, 
+ *  <object> map - google map object
+ *  <object> MarkerWithLabel - marker for map, 
+ *  <object> UI - handles UI spesific logic (accordian and div size), 
  * TABLE OF CONTENTS:
  *  1. Constants
  *  2. Full Scope Module Wide Variables
@@ -264,6 +268,7 @@ const Scriptures = (function () {
 
     const uniqueMarkers = function () {
         // https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
+        
         let j = {}
         for (const marker of state.gmap_markers) {
             const lat = marker.position.lat()
