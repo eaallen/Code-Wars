@@ -3,7 +3,7 @@
  * AUTHOR:  Elijah Allen
  * DATE:    Winter 2021
  * 
- * DESCRIPTION: Forntend web dev IS 452 Scriptures and google maps
+ * DESCRIPTION: Frontend web dev IS 452 Scriptures and google maps
  * 
  * GLOBALS: 
  *  <object> HTMLHelper - static methods for creating html elements, 
@@ -25,7 +25,6 @@
  *      h. Initalization and Getting Data
  * 
  ===============================================================================*/
-
 
 
 const Scriptures = (function () {
@@ -231,7 +230,12 @@ const Scriptures = (function () {
                 bounds.extend(loc);
             }
             map.fitBounds(bounds);
+            if (state.gmap_markers.length === 1) {
+                //  this method could be hard to keep track of
+                zoomMapWithAltitude(state.onlyOneAltitude||12)
+            }
         }
+
         return
     }
 
@@ -248,8 +252,9 @@ const Scriptures = (function () {
             clearMarkers()
         }
         // add a marker for each link that calles the "showLocation" method in the chapter contents
+        let matches
         document.querySelectorAll("a[onclick^=\"showLocation(\"]").forEach(element => {
-            let matches = GEO_LOCATION_REGEX.exec(element.getAttribute('onclick'))
+            matches = GEO_LOCATION_REGEX.exec(element.getAttribute('onclick'))
 
             if (matches) {
                 let place_name = matches[GEO_LOCATION_INDEX_PLACE_NAME]
@@ -265,10 +270,11 @@ const Scriptures = (function () {
             }
         })
         // filter markers, remove duplicates
-        uniqueMarkers()
+        uniqueMarkers(Number(matches[GEO_LOCATION_INDEX_ALTITUDE]))
+        
     }
 
-    const uniqueMarkers = function () {
+    const uniqueMarkers = function (alt) {
         // this gets unique elelemts using an object (j)
         // https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
         let j = {}
@@ -299,6 +305,9 @@ const Scriptures = (function () {
             }
         }
         state.gmap_markers = Object.keys(j).map(key => j[key])
+        if(state.gmap_markers.length === 1){
+            state.onlyOneAltitude = alt
+        }
     }
 
     // ---------------------------------- Navigation Hanlers ------------------------------
