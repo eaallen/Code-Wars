@@ -270,7 +270,9 @@ const Scriptures = (function () {
             }
         })
         // filter markers, remove duplicates
-        uniqueMarkers(Number(matches[GEO_LOCATION_INDEX_ALTITUDE]))
+        if(matches){
+            uniqueMarkers(Number(matches[GEO_LOCATION_INDEX_ALTITUDE]))
+        }
         
     }
 
