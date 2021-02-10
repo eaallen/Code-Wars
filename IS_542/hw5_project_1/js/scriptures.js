@@ -80,7 +80,7 @@ const Scriptures = (function () {
         //     title: place_name,
         //     animation: google.maps.Animation.DROP
         // })
-        const label_text = place_name.replace(/[<>~]/, '')
+        const label_text = place_name.replace(/[<>~?]/, '')
         let marker = new MarkerWithLabel({
             position: { lat: lat, lng: lng },
             map: map,
@@ -184,13 +184,13 @@ const Scriptures = (function () {
     const booksGridContent = function (volume) {
         let grid_content = ''
         volume.books.forEach(book => {
-            grid_content += HTML.div({
-                class_name: CLASS_BUTTON,
-                id: book.id,
-                content: HTML.link({
-                    class_name: CLASS_BUTTON_LINK,
-                    id: '',
-                    href: `#${volume.id}:${book.id}`,
+            grid_content += HTML.link({
+                class_name: CLASS_BUTTON_LINK,
+                id: '',
+                href: `#${volume.id}:${book.id}`,
+                content: HTML.div({
+                    class_name: CLASS_BUTTON,
+                    id: book.id,
                     content: book.gridName
                 })
             })
@@ -214,12 +214,12 @@ const Scriptures = (function () {
 
         // loops for all chapters in book
         while (chapter <= book.numChapters) {
-            grid_content += HTML.div({
-                class_name: CLASS_BUTTON,
-                content: HTML.link({
-                    class_name: CLASS_CHAPTER,
-                    id: chapter.toString() + '_chapter_id',
-                    href: `#0:${book.id}:${chapter}`,
+            grid_content += HTML.link({
+                class_name: CLASS_CHAPTER,
+                id: chapter.toString() + '_chapter_id',
+                href: `#0:${book.id}:${chapter}`,
+                content: HTML.div({
+                    class_name: CLASS_BUTTON,
                     content: chapter
                 })
             })
@@ -283,6 +283,12 @@ const Scriptures = (function () {
 
     const navigateBook = function (book_id) {
         let book = state.books[book_id];
+        document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
+        document.getElementById('breadcrumb_book').style.visibility = 'visible'
+        document.getElementById('breadcrumb_book').innerHTML = HTML.hashLink(
+            `0:${book_id}`,
+            `${book.citeFull}`
+        )
 
         if (book.numChapters <= 1) {
             navigateChapter(book_id, book.numChapters)
@@ -378,36 +384,64 @@ const Scriptures = (function () {
     }
 
     const getScripturesCallback = function (html, book_id, chapter_id) {
+        // getting next and previous chapters
         const [next_book_id, next_chapter_value, next_title] = nextChapter(book_id, chapter_id) ||
             [false, false, false]
         const [prev_book_id, prev_chapter_value, prev_title] = prevChapter(book_id, chapter_id) ||
             [false, false, false]
 
-        const back_to_volumes = HTML.hashLink('0','Volumes')
-        document.getElementById(DIV_SCRIPTURES).innerHTML = (prev_book_id ? `
+        // display the "next" & "back" elements, if there are no more 
+        // chapters in the volume then go back to the volumes list
+        const back_to_volumes = HTML.hashLink('0', 'Volumes')
+        document.getElementById(DIV_SCRIPTURES).innerHTML = `
         <div class="chapter-nav">
-            <div id="prev_btn" class="chapter-nav-btn" title="${prev_title}"> ${HTML.hashLink(
+            <div id="prev_btn" class="chapter-nav-btn" title="${prev_title}"> ${prev_book_id ? HTML.hashLink(
             `0:${prev_book_id}:${prev_chapter_value}`,
             'Back'
-        )} </div> ` : back_to_volumes) + (next_book_id ? `
-            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${HTML.hashLink(
+        ) : back_to_volumes} </div>
+            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${next_book_id ? HTML.hashLink(
             `0:${next_book_id}:${next_chapter_value}`,
             'Next'
-        )} </div> 
-        </div>`: back_to_volumes) + `${html}`
-               
+        ) : back_to_volumes} </div> 
+        </div>${html}`
 
+        //  display the makers on the map
         setUpMarkers()
 
-        if (state.gmap_markers.length > 0) {
+        // fit all of the markers in the map's view
+        centerMapMarkers(state.gmap_markers)
 
+        // set up breadcrumb
+        document.getElementById('breadcrumb_book').style.visibility = 'visible'
+        document.getElementById('breadcrumb_book').innerHTML = HTML.hashLink(
+            `0:${book_id}`,
+            `${state.books[book_id].citeFull}`
+        )
+        if (chapter_id) {
+            document.getElementById('breadcrumb_chapter').style.visibility = 'visible'
+            document.getElementById('breadcrumb_chapter').innerHTML = HTML.hashLink(
+                `0:${book_id}:${chapter_id}`,
+                `Chapter ${chapter_id}`
+            )
+            document.getElementById('breadcrumb_chapter').addEventListener('click', () => {
+                centerMapMarkers(state.gmap_markers)
+            })
+        } else {
+            document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
+        }
+
+    }
+
+    const centerMapMarkers = function (map_markers_array) {
+        if (map_markers_array.length > 0) {
             let bounds = new google.maps.LatLngBounds();
-            for (const marker of state.gmap_markers) {
+            for (const marker of map_markers_array) {
                 loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
                 bounds.extend(loc);
             }
             map.fitBounds(bounds);
         }
+        return
     }
 
     const changeHash = function (hash_string) {
@@ -444,6 +478,10 @@ const Scriptures = (function () {
         })
 
         UI.accordian(CLASS_ACCORDIAN)
+
+        // bread crumb
+        document.getElementById('breadcrumb_book').style.visibility = 'hidden'
+        document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
     }
 
     const cacheBooks = function (callback) {

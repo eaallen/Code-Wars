@@ -28,9 +28,19 @@ const UI = function () {
         accordian()
     }
 
+    const getElementYDimesionById = function(id){
+        const element_height = document.getElementById(id).offsetHeight
+        return element_height
+    }
+
+    const setElementYDimesionsById = function(id, str_height){
+        document.getElementById(id).style.maxHeight = str_height 
+    }
 
     return {
         init,
-        accordian
+        accordian,
+        getElementYDimesionById,
+        setElementYDimesionsById
     }
 }()

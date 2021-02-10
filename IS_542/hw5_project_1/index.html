@@ -20,8 +20,8 @@
 </head>
 
 <body>
-
-    <div class="container">
+    <!-- TODO: add invisbale marker for jerusleam so it will all ways be in the map -->
+    <div class="container" id="outer">
         <div id="header">
             <div id="center-head">
                 <div id="title">
@@ -30,23 +30,25 @@
                 <div id="subtitle">Elijah Allen</div>
             </div>
         </div>
-        <div id="content" class="row ">
-            <div id="scripture_viewer" class="column col-25 ">
-                <ul class="breadcrumb" id="nav_breadcrumb">
-                    <li><a id="breadcrumb_volume" href="#0">Volumes</a></li>
-                    <li><a id="breadcrumb_book" href="#">[Book Name]</a></li>
-                    <li id="breadcrumb_chapter">chapter [number]</li>
-                </ul>
-                <div id="navigator"></div>
-                <!-- volumes grid -->
-                <div id="scriptures"></div>
-                <!-- for each volume repeat the following -->
+        <div id="inner_remaining">
+            <div id="content" class="row ">
+                <div id="scripture_viewer" class="column col-25 ">
+                    <ul class="breadcrumb" id="nav_breadcrumb">
+                        <li><a id="breadcrumb_volume" href="#0">Volumes</a></li>
+                        <li><a id="breadcrumb_book" href="#"></a></li>
+                        <li id="breadcrumb_chapter"></li>
+                    </ul>
+                    <div id="navigator"></div>
+                    <!-- volumes grid -->
+                    <div id="scriptures"></div>
+                    <!-- for each volume repeat the following -->
 
-                <div id="text">
+                    <div id="text">
 
+                    </div>
                 </div>
+                <div id="map" class="col-75"></div>
             </div>
-            <div id="map" class="col-75"></div>
         </div>
     </div>
 
@@ -77,6 +79,12 @@
             Scriptures.init(() => Scriptures.onHashChange())
             showLocation = Scriptures.showLocation
             window.addEventListener("hashchange", Scriptures.onHashChange)
+
+            const a = UI.getElementYDimesionById('header')
+            const b = UI.getElementYDimesionById('map')
+            const c = Math.abs(a - b)
+            console.log(c,'cc')
+            UI.setElementYDimesionsById('scripture_viewer',`${c}px`)
 
 
         })
