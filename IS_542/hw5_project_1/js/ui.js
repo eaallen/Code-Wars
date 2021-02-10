@@ -1,8 +1,7 @@
 const UI = function () {
 
-    const accordian = function (id) {
         // https://www.w3schools.com/howto/howto_js_accordion.asp
-
+        const accordian = function (id) {
         let acc = document.getElementsByClassName(id);
         let i;
 
@@ -10,7 +9,6 @@ const UI = function () {
             acc[i].addEventListener("click", function () {
                 /* Toggle between adding and removing the "active" class,
                 to highlight the button that controls the panel */
-                console.log(this)
                 this.classList.toggle("active");
 
                 /* Toggle between hiding and showing the active panel */
@@ -24,18 +22,31 @@ const UI = function () {
         }
     }
 
-    const init = function () {
-        accordian()
-    }
 
-    const getElementYDimesionById = function(id){
+    const getElementYDimesionById = function (id) {
         const element_height = document.getElementById(id).offsetHeight
         return element_height
     }
 
-    const setElementYDimesionsById = function(id, str_height){
-        document.getElementById(id).style.maxHeight = str_height 
+    const setElementYDimesionsById = function (id, str_height) {
+        document.getElementById(id).style.maxHeight = str_height
     }
+
+    const dynamicSizingOfScriptureViewer = function () {
+        // seeting the max height for the scripture viewer
+        // this allows for dynamic overflow-scroll
+        getElementYDimesionById('map')
+        setElementYDimesionsById('scripture_viewer', `${b}px`)
+
+    }
+
+    const init = function () {
+        // set up scriptutre viewer max haight 
+        // add method to window.onresize
+        // dynamicSizingOfScriptureViewer()
+        window.addEventListener('resize',dynamicSizingOfScriptureViewer)
+    }
+
 
     return {
         init,

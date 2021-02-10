@@ -20,7 +20,7 @@ body {
 #header {
     text-align: center;
     background: #01447e;
-    padding: 10px;
+    height: 4rem;
     color: #fff;
 }
 
@@ -30,7 +30,9 @@ body {
 
 #scripture_viewer {
     background-color: #d3d2d2;
-    padding: 1rem;
+    /* padding: 2rem; */
+    padding-left: .5rem;
+    padding-right: .5rem;
     max-height: 100%;
     overflow-y: scroll;
 }
@@ -110,6 +112,8 @@ body {
     padding: 3px;
 }
 
+/* The Accordian styles are from w3Schools.com */
+
 /* Style the buttons that are used to open and close the accordion panel */
 
 .accordion {
@@ -140,7 +144,7 @@ body {
     overflow: hidden;
 }
 
-/* BREAD CRUMB */
+/* BREADCRUMB (w3Schools.com)*/
 
 /* Style the list */
 

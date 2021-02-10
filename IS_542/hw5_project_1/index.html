@@ -58,7 +58,6 @@
         let map
         let showLocation
         function initMap() {
-            console.log('init map')
             map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: 31.7683, lng: 35.2137 },
                 zoom: 8,
@@ -80,12 +79,16 @@
             showLocation = Scriptures.showLocation
             window.addEventListener("hashchange", Scriptures.onHashChange)
 
-            const a = UI.getElementYDimesionById('header')
+            // seeting the max height for the scripture viewer
+            // this allows for dynamic overflow-scroll
             const b = UI.getElementYDimesionById('map')
-            const c = Math.abs(a - b)
-            console.log(c,'cc')
-            UI.setElementYDimesionsById('scripture_viewer',`${c}px`)
+            UI.setElementYDimesionsById('scripture_viewer',`${b}px`)
 
+            // set the max height with the onchange, this is currently a little buggy
+            window.addEventListener('resize', () => {
+                const size = UI.getElementYDimesionById('map')
+                UI.setElementYDimesionsById('scripture_viewer', `${size}px`)
+            })
 
         })
     </script>

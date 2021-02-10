@@ -5,7 +5,18 @@
  * 
  * DESCRIPTION: Forntend web dev IS 452 Scriptures and google maps
  * GLOBALS: HTMLHelper, map, MarkerWithLabel, UI
- *
+ * TABLE OF CONTENTS:
+ *  1. Constants
+ *  2. Full Scope Module Wide Variables
+ *  3. Functions
+ *      a. Imported Moduels
+ *      b. Grid Rendering
+ *      c. Hash Managment
+ *      d. Marker Handlers
+ *      e. Navigation Handlers
+ *      f. Other Rendering
+ *      g. Show Location
+ *      h. Initalization and Getting Data
  * 
  ===============================================================================*/
 
@@ -19,6 +30,7 @@ const Scriptures = (function () {
     const CLASS_VOLUMES = 'volume'
     const CLASS_ACCORDIAN = 'accordion'
     const CLASS_PANEL_FOR_ACCORDIAN = 'panel-for-accordian'
+    const CLASS_MAP_LABELS = 'labels'
 
     const DIV_SCRIPTURE_NAVIGATOR = 'scripnav'
     const DIV_SCRIPTURES = 'scriptures'
@@ -41,138 +53,18 @@ const Scriptures = (function () {
 
     //--------------------------------------- Variables -----------------------------------
 
-    // using state to keep track of the "state" of these varaibles in this module
+    // using state to keep track of these varaibles in this module
     const state = {
-        books: null, // array
-        volumes: null, // array
+        books: null, // will be turned into an array
+        volumes: null, // will be turned into an array
         gmap_markers: []
     }
 
-    // ----------------------------------- Functions --------------------------------------
+    // ==================================== Functions ======================================
     // static class with helper functions 
     const HTML = HTMLHelper // addess: ./HTMLHelper.js
 
-    const addMarker = function (place_name, lat, lng) {
-        // make sure these are floating values 
-        lat = Number(lat)
-        lng = Number(lng)
-
-        // remove duplicate
-        state.gmap_markers = state.gmap_markers.filter(marker => {
-            // we have a duplicate latitude and longitude
-            if (marker.position.lat() === lat && marker.position.lng() === lng) {
-                // and the name is the same 
-                if (marker.title === place_name) {
-                    // clear the marker 
-                    marker.setMap(null)
-                    // remove from this array 
-                    return false
-                }
-            }
-            // keep in this array 
-            return true
-        })
-
-        //  creat new marker and add to array of markers 
-        // let marker = new google.maps.Marker({
-        //     position: { lat: lat, lng: lng },
-        //     map: map,
-        //     title: place_name,
-        //     animation: google.maps.Animation.DROP
-        // })
-        const label_text = place_name.replace(/[<>~?]/, '')
-        let marker = new MarkerWithLabel({
-            position: { lat: lat, lng: lng },
-            map: map,
-            labelContent: label_text, // can also be HTMLElement
-            labelAnchor: new google.maps.Point(((label_text.length / 2) * -10), 3),
-            labelClass: "labels", // the CSS class for the label
-            labelStyle: { opacity: 1.0 },
-            title: place_name,
-        })
-
-        state.gmap_markers.push(marker)
-    }
-
-    const clearMarkers = function () {
-        console.table(state.gmap_markers)
-
-        console.log(' clear markers ')
-
-        for (let i = 0; i < state.gmap_markers.length; i++) {
-            state.gmap_markers[i].setMap(null)
-        }
-
-        state.gmap_markers = []
-    }
-
-    const setUpMarkers = function () {
-        if (state.gmap_markers.length > 0) {
-            console.log('clear markers!!!')
-            clearMarkers()
-        }
-
-        document.querySelectorAll("a[onclick^=\"showLocation(\"]").forEach(element => {
-            let matches = GEO_LOCATION_REGEX.exec(element.getAttribute('onclick'))
-
-            if (matches) {
-                let place_name = matches[GEO_LOCATION_INDEX_PLACE_NAME]
-                let lat = matches[GEO_LOCATION_INDEX_LATITUDE]
-                let lng = matches[GEO_LOCATION_INDEX_LONGITUDE]
-                let flag = matches[GEO_LOCATION_INDEX_FLAG]
-
-                if (flag !== '') {
-                    place_name = `${place_name} ${flag}`
-                }
-                addMarker(place_name, lat, lng)
-            }
-        })
-
-
-    }
-
-    const showLocation = function (
-        geotagId,
-        placename,
-        latitude,
-        longitude,
-        viewLatitude,
-        viewLongitude,
-        viewTilt,
-        viewRoll,
-        viewAltitude,
-        viewHeading
-    ) {
-        // convert strings to numbers
-        const lat = Number(latitude)
-        const lng = Number(longitude)
-        const alt = Number(viewAltitude)
-
-        const latLng = new google.maps.LatLng({ lat, lng })
-
-        // find the current zoom level, zoom in if level is higher than expected 
-        let zoom_level = 0
-        switch (viewHeading) {
-            // small area
-            case '<':
-                map.setZoom(10)
-                break
-            // large area
-            case '>':
-                map.setZoom(3)
-                break
-            //    general area
-            case '~':
-                map.setZoom(8)
-                break
-            // city
-            default:
-                map.setZoom(12)
-                break
-        }
-        map.setCenter(latLng)
-    }
-
+    // ----------------------------------- Grid Rendering ---------------------------------
     // generates a grid for the books 
     const booksGrid = function (volume) {
         return HTML.div({
@@ -181,6 +73,7 @@ const Scriptures = (function () {
         })
     }
 
+    // this is the content for the grid
     const booksGridContent = function (volume) {
         let grid_content = ''
         volume.books.forEach(book => {
@@ -198,6 +91,25 @@ const Scriptures = (function () {
         return grid_content
     }
 
+    const volumesGridContent = function (volume_id) {
+        let grid_content = ''
+        state.volumes.forEach(volume => {
+            //  show all volumes            show one volume
+            if (volume_id === undefined || volume_id === volume.id) {
+                grid_content += HTML.div({
+                    class_name: `${CLASS_VOLUMES} ${CLASS_ACCORDIAN}`,
+                    content: HTML.element(TAG_HEADER_5, volume.fullName)
+                })
+                grid_content += booksGrid(volume)
+            }
+        }
+        )
+
+        return grid_content
+    }
+
+
+    // generates a grid for the chapters of a book 
     const chaptersGrid = function (book) {
         return HTML.div({
             class_name: CLASS_VOLUMES,
@@ -208,6 +120,7 @@ const Scriptures = (function () {
         })
     }
 
+    // this is the content for the grid
     const chaptersGriContent = function (book) {
         let grid_content = ''
         let chapter = 1
@@ -228,8 +141,9 @@ const Scriptures = (function () {
         return grid_content
     }
 
-
-    //  use the url hash as state management. we store important data in the url hash and read it when it changes to 
+    // ------------------------------------ Hash Managment -------------------------------------
+    //  use the url hash as state management. we store 
+    //  important data in the url hash and read it when it changes to 
     //  to render the rest of the app. 
     const onHashChange = function () {
         const id_array = []
@@ -277,12 +191,117 @@ const Scriptures = (function () {
                 return
             }
         }
-
-
     }
 
+
+    // --------------------------------- Marker Handlers ----------------------------------
+    const addMarker = function (place_name, lat, lng) {
+        // make sure these are floating values 
+        lat = Number(lat)
+        lng = Number(lng)
+
+        // remove duplicate
+        state.gmap_markers = state.gmap_markers.filter(marker => {
+            // we have a duplicate latitude and longitude
+            if (marker.position.lat() === lat && marker.position.lng() === lng) {
+                // and the name is the same 
+                if (marker.title === place_name) {
+                    // clear the marker 
+                    marker.setMap(null)
+                    // remove from this array 
+                    return false
+                }
+            }
+            // keep in this array 
+            return true
+        })
+        //  creat new marker and add to array of markers 
+        const label_text = place_name.replace(/[<>~?]/, '')
+        let marker = new MarkerWithLabel({
+            position: { lat: lat, lng: lng },
+            map: map,
+            labelContent: label_text, // can also be HTMLElement
+            labelAnchor: new google.maps.Point(((label_text.length / 2) * -10), 3),
+            labelClass: CLASS_MAP_LABELS, // the CSS class for the label
+            labelStyle: { opacity: 1.0 },
+            title: place_name,
+        })
+        state.gmap_markers.push(marker)
+    }
+
+    const centerMapMarkers = function (map_markers_array) {
+        if (map_markers_array.length > 0) {
+            let bounds = new google.maps.LatLngBounds();
+            for (const marker of map_markers_array) {
+                loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+                bounds.extend(loc);
+            }
+            map.fitBounds(bounds);
+        }
+        return
+    }
+
+    const clearMarkers = function () {
+        for (let i = 0; i < state.gmap_markers.length; i++) {
+            state.gmap_markers[i].setMap(null)
+        }
+        state.gmap_markers = []
+    }
+
+    const setUpMarkers = function () {
+        // clear existing markers
+        if (state.gmap_markers.length > 0) {
+            console.log('clear markers!!!')
+            clearMarkers()
+        }
+        // add a marker for each link that calles the "showLocation" method in the chapter contents
+        document.querySelectorAll("a[onclick^=\"showLocation(\"]").forEach(element => {
+            let matches = GEO_LOCATION_REGEX.exec(element.getAttribute('onclick'))
+
+            if (matches) {
+                let place_name = matches[GEO_LOCATION_INDEX_PLACE_NAME]
+                let lat = matches[GEO_LOCATION_INDEX_LATITUDE]
+                let lng = matches[GEO_LOCATION_INDEX_LONGITUDE]
+                let flag = matches[GEO_LOCATION_INDEX_FLAG]
+
+                if (flag !== '') {
+                    place_name = `${place_name} ${flag}`
+                }
+                addMarker(place_name, lat, lng)
+            }
+        })
+    }
+
+
+
+    // ---------------------------------- Navigation Hanlers ------------------------------
+    // Navigates to the Home View
+    const navigateHome = function (volume_id) {
+
+        document.getElementById(DIV_SCRIPTURES).innerHTML = HTML.div({
+            id: DIV_SCRIPTURE_NAVIGATOR,
+            content: volumesGridContent()
+        })
+
+        UI.accordian(CLASS_ACCORDIAN)
+
+        // show accordian section as active if it matches the volume ID
+        if (volume_id) {
+            let acc = document.getElementsByClassName(CLASS_ACCORDIAN);
+            acc[volume_id - 1].classList.add('active')
+            acc[volume_id - 1].nextElementSibling.style.display = "block";
+        }
+
+        // bread crumb
+        document.getElementById('breadcrumb_book').style.visibility = 'hidden'
+        document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
+    }
+
+    // navigate to the books contents, display book name in breadcrumb 
     const navigateBook = function (book_id) {
         let book = state.books[book_id];
+
+        // handleing breadcrum
         document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
         document.getElementById('breadcrumb_book').style.visibility = 'visible'
         document.getElementById('breadcrumb_book').innerHTML = HTML.hashLink(
@@ -299,6 +318,9 @@ const Scriptures = (function () {
             })
         }
     }
+
+    // Ajax call to get chapter data, see getScripturesCallback for 
+    // how this data is processed
     const navigateChapter = function (book_id, chapter_id) {
         ajax(
             encodedScripturesUrlParams(book_id, chapter_id),
@@ -308,8 +330,85 @@ const Scriptures = (function () {
         )
     }
 
+    // handles date recieved from the server:
+    // Renders: chapter contents, next / back links, and breadcrumb 
+    const getScripturesCallback = function (html, book_id, chapter_id) {
+        // getting next and previous chapters
+        const [next_book_id, next_chapter_value, next_title] = nextChapter(book_id, chapter_id) ||
+            [false, false, false]
+        const [prev_book_id, prev_chapter_value, prev_title] = prevChapter(book_id, chapter_id) ||
+            [false, false, false]
+
+        // display the "next" & "back" elements, if there are no more 
+        // chapters in the volume then go back to the volumes list
+        const back_to_volumes = HTML.hashLink('0', 'Volumes')
+        document.getElementById(DIV_SCRIPTURES).innerHTML = `
+        <div class="chapter-nav">
+            <div id="prev_btn" class="chapter-nav-btn" title="${prev_title}"> ${prev_book_id ? HTML.hashLink(
+            `0:${prev_book_id}:${prev_chapter_value}`,
+            'Back'
+        ) : back_to_volumes} </div>
+            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${next_book_id ? HTML.hashLink(
+            `0:${next_book_id}:${next_chapter_value}`,
+            'Next'
+        ) : back_to_volumes} </div> 
+        </div>${html}`
+
+        // display the makers on the map
+        setUpMarkers()
+
+        // fit all of the markers in the map's view
+        centerMapMarkers(state.gmap_markers)
+
+        // set up breadcrumb
+        document.getElementById('breadcrumb_book').style.visibility = 'visible'
+        document.getElementById('breadcrumb_book').innerHTML = HTML.hashLink(
+            `0:${book_id}`,
+            `${state.books[book_id].citeFull}`
+        )
+        if (chapter_id) {
+            document.getElementById('breadcrumb_chapter').style.visibility = 'visible'
+            document.getElementById('breadcrumb_chapter').innerHTML = HTML.hashLink(
+                `0:${book_id}:${chapter_id}`,
+                `Chapter ${chapter_id}`
+            )
+            // clicking the chapter breadcrumb will recenter the markers on the map
+            document.getElementById('breadcrumb_chapter').addEventListener('click', () => {
+                centerMapMarkers(state.gmap_markers)
+            })
+        } else {
+            document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
+        }
+
+    }
+
+
+    // encodes data for GET request, used with navigateChapter
+    const encodedScripturesUrlParams = function (book_id, chapter_id, verses, is_jst) {
+        if (book_id !== undefined && chapter_id !== undefined) {
+            let options = '';
+            if (verses !== undefined) {
+                options += verses
+            }
+            if (is_jst !== undefined) {
+                options += '&jst=JST'
+            }
+            return `${URL_SCRIPTURES}?book=${book_id}&chap=${chapter_id}&verses=${options}`
+        }
+        console.error('Book ID or Chapter ID are Undefined')
+    }
+
+    // errer handling for navigateChapter()
+    const getScripturesFailure = function (data) {
+        document.getElementById(DIV_SCRIPTURES).innerHTML = 'Error'
+        console.error('unable to retireve data', data)
+    }
+
+
+
+    // gets the info for the next chapter / book in the volume
+    // returns null if there are no more books or chapters
     const nextChapter = function (book_id, chapter_num) {
-        console.log('next chapter!')
         let book = state.books[book_id]
         if (book !== undefined) {
             // looking for next chapter in book
@@ -336,8 +435,11 @@ const Scriptures = (function () {
                 ]
             }
         }
+        return null
     }
 
+    // gets the info for the previous chapter / book in the volume
+    // returns null if there are no more books or chapters
     const prevChapter = function (book_id, chapter_num) {
         console.log('prev chapter')
         let book = state.books[book_id]
@@ -367,91 +469,10 @@ const Scriptures = (function () {
                 ]
             }
         }
-
+        return null
     }
 
-    const encodedScripturesUrlParams = function (book_id, chapter_id, verses, is_jst) {
-        if (book_id !== undefined && chapter_id !== undefined) {
-            let options = '';
-            if (verses !== undefined) {
-                options += verses
-            }
-            if (is_jst !== undefined) {
-                options += '&jst=JST'
-            }
-            return `${URL_SCRIPTURES}?book=${book_id}&chap=${chapter_id}&verses=${options}`
-        }
-    }
 
-    const getScripturesCallback = function (html, book_id, chapter_id) {
-        // getting next and previous chapters
-        const [next_book_id, next_chapter_value, next_title] = nextChapter(book_id, chapter_id) ||
-            [false, false, false]
-        const [prev_book_id, prev_chapter_value, prev_title] = prevChapter(book_id, chapter_id) ||
-            [false, false, false]
-
-        // display the "next" & "back" elements, if there are no more 
-        // chapters in the volume then go back to the volumes list
-        const back_to_volumes = HTML.hashLink('0', 'Volumes')
-        document.getElementById(DIV_SCRIPTURES).innerHTML = `
-        <div class="chapter-nav">
-            <div id="prev_btn" class="chapter-nav-btn" title="${prev_title}"> ${prev_book_id ? HTML.hashLink(
-            `0:${prev_book_id}:${prev_chapter_value}`,
-            'Back'
-        ) : back_to_volumes} </div>
-            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${next_book_id ? HTML.hashLink(
-            `0:${next_book_id}:${next_chapter_value}`,
-            'Next'
-        ) : back_to_volumes} </div> 
-        </div>${html}`
-
-        //  display the makers on the map
-        setUpMarkers()
-
-        // fit all of the markers in the map's view
-        centerMapMarkers(state.gmap_markers)
-
-        // set up breadcrumb
-        document.getElementById('breadcrumb_book').style.visibility = 'visible'
-        document.getElementById('breadcrumb_book').innerHTML = HTML.hashLink(
-            `0:${book_id}`,
-            `${state.books[book_id].citeFull}`
-        )
-        if (chapter_id) {
-            document.getElementById('breadcrumb_chapter').style.visibility = 'visible'
-            document.getElementById('breadcrumb_chapter').innerHTML = HTML.hashLink(
-                `0:${book_id}:${chapter_id}`,
-                `Chapter ${chapter_id}`
-            )
-            document.getElementById('breadcrumb_chapter').addEventListener('click', () => {
-                centerMapMarkers(state.gmap_markers)
-            })
-        } else {
-            document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
-        }
-
-    }
-
-    const centerMapMarkers = function (map_markers_array) {
-        if (map_markers_array.length > 0) {
-            let bounds = new google.maps.LatLngBounds();
-            for (const marker of map_markers_array) {
-                loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
-                bounds.extend(loc);
-            }
-            map.fitBounds(bounds);
-        }
-        return
-    }
-
-    const changeHash = function (hash_string) {
-        window.location.hash = `#${hash_string}`
-    }
-
-    const getScripturesFailure = function (data) {
-        document.getElementById(DIV_SCRIPTURES).innerHTML = 'Error'
-        console.error('unable to retireve data', data)
-    }
 
     // refactor this for better validation 
     const bookChapterValid = function (book_id, chapter) {
@@ -470,20 +491,54 @@ const Scriptures = (function () {
         return true
     }
 
-    const navigateHome = function (volume_id) {
+    // ------------------------------- Other Rendering --------------------------------
+    const titleForBookChapter = function (book, chapter_num) {
+        if (book !== undefined) {
+            if (chapter_num > 0) {
+                return `${book.tocName} ${chapter_num}`
+            }
 
-        document.getElementById(DIV_SCRIPTURES).innerHTML = HTML.div({
-            id: DIV_SCRIPTURE_NAVIGATOR,
-            content: volumesGridContent(volume_id)
-        })
-
-        UI.accordian(CLASS_ACCORDIAN)
-
-        // bread crumb
-        document.getElementById('breadcrumb_book').style.visibility = 'hidden'
-        document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
+            return book.tocName
+        }
     }
 
+    // ----------------------------------- SHOW LOCATION -----------------------------------
+    const showLocation = function (
+        geotagId,
+        placename,
+        latitude,
+        longitude,
+        viewLatitude,
+        viewLongitude,
+        viewTilt,
+        viewRoll,
+        viewAltitude,
+        viewHeading,
+        symbol,
+    ) {
+        // convert strings to numbers
+        const lat = Number(latitude)
+        const lng = Number(longitude)
+        const alt = Number(viewAltitude)
+
+        const latLng = new google.maps.LatLng({ lat, lng })
+
+        // set the zoom level depending on the altitude 
+        if (alt >= 5000) {
+            map.setZoom(12)
+        } else if (alt >= 2000) {
+            map.setZoom(15)
+        } else {
+            map.setZoom(17)
+        }
+
+        // show the marker in the center of the map
+        map.setCenter(latLng)
+    }
+
+
+    // ------------------------ Initalization and Getting Data -----------------------------
+    // combines books with thier propper volume
     const cacheBooks = function (callback) {
         state.volumes.forEach(volume => {
             const volume_books = []
@@ -502,6 +557,7 @@ const Scriptures = (function () {
         }
     }
 
+    // XHR Requests 
     const ajax = function (url, successCallback, failCallback, skip_json_parse) {
         let request = new XMLHttpRequest();
         request.open(REQUEST_GET, url, true);
@@ -527,6 +583,7 @@ const Scriptures = (function () {
 
         request.send();
     }
+
     const init = function (callback) {
         let books_loaded = false
         let vols_loaded = false
@@ -536,42 +593,15 @@ const Scriptures = (function () {
             if (vols_loaded) {
                 cacheBooks(callback)
             }
-        }, () => console.error('error books'))
+        }, () => console.error('error loading books'))
         ajax(URL_VOLUMES, data => {
             state.volumes = data
             vols_loaded = true
             if (books_loaded) {
                 cacheBooks(callback)
             }
-        }, () => console.error('error volumes'))
+        }, () => console.error('error loading volumes'))
 
-    }
-    const titleForBookChapter = function (book, chapter_num) {
-        if (book !== undefined) {
-            if (chapter_num > 0) {
-                return `${book.tocName} ${chapter_num}`
-            }
-
-            return book.tocName
-        }
-    }
-
-    const volumesGridContent = function (volume_id) {
-        let grid_content = ''
-        state.volumes.forEach(volume => {
-            //  show all volumes            show one volume
-            if (volume_id === undefined || volume_id === volume.id) {
-                grid_content += HTML.div({
-                    class_name: `${CLASS_VOLUMES} ${CLASS_ACCORDIAN}`,
-                    content: HTML.anchor(volume) +
-                        HTML.element(TAG_HEADER_5, volume.fullName)
-                })
-                grid_content += booksGrid(volume)
-            }
-        }
-        )
-
-        return grid_content
     }
 
     return {
@@ -580,8 +610,3 @@ const Scriptures = (function () {
         showLocation,
     }
 }())
-
-
-
-
-
