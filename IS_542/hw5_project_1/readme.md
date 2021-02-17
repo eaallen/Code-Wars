@@ -17,6 +17,7 @@
 ## Skills Achieved 
 - Google Maps API
 - XHR 
+- fetch 
 - Vanilla JS (Modules, DOM Tree, State Management)
 - Event Handlers
 - URL hashes

@@ -232,7 +232,7 @@ const Scriptures = (function () {
             map.fitBounds(bounds);
             if (state.gmap_markers.length === 1) {
                 //  this method could be hard to keep track of
-                zoomMapWithAltitude(state.onlyOneAltitude||12)
+                zoomMapWithAltitude(state.onlyOneAltitude || 12)
             }
         }
 
@@ -270,10 +270,10 @@ const Scriptures = (function () {
             }
         })
         // filter markers, remove duplicates
-        if(matches){
+        if (matches) {
             uniqueMarkers(Number(matches[GEO_LOCATION_INDEX_ALTITUDE]))
         }
-        
+
     }
 
     const uniqueMarkers = function (alt) {
@@ -307,7 +307,7 @@ const Scriptures = (function () {
             }
         }
         state.gmap_markers = Object.keys(j).map(key => j[key])
-        if(state.gmap_markers.length === 1){
+        if (state.gmap_markers.length === 1) {
             state.onlyOneAltitude = alt
         }
     }
@@ -357,15 +357,12 @@ const Scriptures = (function () {
         }
     }
 
-    // Ajax call to get chapter data, see getScripturesCallback for 
+    // fetch call to get chapter data, see getScripturesCallback for 
     // how this data is processed
-    const navigateChapter = function (book_id, chapter_id) {
-        ajax(
-            encodedScripturesUrlParams(book_id, chapter_id),
-            html => getScripturesCallback(html, book_id, chapter_id),
-            getScripturesFailure,
-            true
-        )
+    const navigateChapter = async function (book_id, chapter_id) {
+        const encoded = encodedScripturesUrlParams(book_id, chapter_id)
+        const html = await getData(encoded, true)
+        getScripturesCallback(html, book_id, chapter_id)
     }
 
     // handles date recieved from the server:
@@ -597,51 +594,20 @@ const Scriptures = (function () {
         }
     }
 
-    // XHR Requests 
-    const ajax = function (url, successCallback, failCallback, skip_json_parse) {
-        let request = new XMLHttpRequest();
-        request.open(REQUEST_GET, url, true);
-
-        request.onload = function () {
-            if (request.status >= REQUEST_STATUS_OK && request.status < REQUEST_STATUS_ERROR) {
-                // Success!
-                let data = skip_json_parse
-                    ? request.response
-                    : JSON.parse(request.response);
-                if (typeof successCallback === 'function') {
-                    successCallback(data)
-                }
-            } else {
-                // We reached our target server, but it returned an error
-                if (typeof failCallback === 'function') {
-                    failCallback(data)
-                }
-            }
-        };
-
-        request.onerror = failCallback
-
-        request.send();
+    // using fetch 
+    async function getData(url, is_html = false) {
+        const data = await fetch(url).then(success => is_html
+            ? success.text()
+            : success.json())
+            .catch(err=>console.error(err))
+        console.log('data from ' + url, data)
+        return data
     }
 
-    const init = function (callback) {
-        let books_loaded = false
-        let vols_loaded = false
-        ajax(URL_BOOKS, data => {
-            state.books = data
-            books_loaded = true
-            if (vols_loaded) {
-                cacheBooks(callback)
-            }
-        }, () => console.error('error loading books'))
-        ajax(URL_VOLUMES, data => {
-            state.volumes = data
-            vols_loaded = true
-            if (books_loaded) {
-                cacheBooks(callback)
-            }
-        }, () => console.error('error loading volumes'))
-
+    const init = async function (callback) {
+        state.books = await getData(URL_BOOKS)
+        state.volumes = await getData(URL_VOLUMES)
+        cacheBooks(callback)
     }
 
     return {
