@@ -1,5 +1,4 @@
 # The Scriptures, Mapped
-
  The Bible can be sometimes pretty dull and obscure. Bring an extra level of excitement to your kids by showing them exactly where events happen in the bible. Gain a better understanding of what it was like to live in the Promised Land at the time of Christ. 
  ![alt text](https://github.com/eaallen/Code-Wars/blob/master/IS_542/hw5_project_1/preview.png)
 
