@@ -1,0 +1,144 @@
+.animation-container {
+    overflow: hidden;
+}
+
+p {
+    animation-duration: 3s;
+    animation-name: slidein;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    position: relative;
+}
+
+@keyframes slidein {
+    from {
+        margin-left: 80%;
+        width: 300%;
+    }
+    50% {
+        font-size: 300%;
+        margin-left: 25%;
+        width: 150%;
+        color: red;
+    }
+    to {
+        margin-left: 0%;
+        width: 100%;
+    }
+}
+
+body, html{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: blue;
+}
+#container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+
+#btn{
+    width: 100px;
+    height: 100px;
+    background-color: aquamarine;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation-name: btn;
+    animation-duration: 5000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+#spinner {
+    animation-name: spin;
+    animation-duration: 5000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function:cubic-bezier(0.075, 0.82, 0.165, 1);
+
+    
+    font-size: 3rem;
+
+    height: 2rem;
+    width: 2rem;
+    background-color: red;
+}
+
+@keyframes btn {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(-360deg);
+    }
+}@keyframes spin {
+    from {
+        transform: rotate(-360deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.c{
+    height: 1200px;
+    width: 1200px;
+    background-color: blue;
+
+    
+}
+
+.box-spin{
+    animation-name: c-spin;
+    animation-duration: 20s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes c-spin{
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+.test{
+    width: 72%;
+    height: 72%;
+    background-color: rgba(255, 255, 255, 0.116); 
+
+}
+
+@keyframes c-spin{
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+.h-center{
+    display: flex;
+    justify-content: center;
+}
+
+.v-center{
+    display: flex;
+    align-items: center;
+}
+
+.hv-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
