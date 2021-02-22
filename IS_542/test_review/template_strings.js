@@ -7,11 +7,11 @@ const tag = function (strings, name, level) {
     else if(level < 7)  rank = 'hitman'
     else if(level < 9)  rank = 'boss'
     else if(level >= 9)  rank = 'godfather'
-
+    console.log(typeof strings[0],strings[0].length)
     return `${strings[0]}${name.toUpperCase()}${strings[1]}${rank}${strings[2]}`
 }
 let _name = 'eli'
 let level = Math.floor(Math.random()*11)
 console.log
-let str = tag `here is ${_name}, he is a mafia ${level}!`
+let str = tag `${_name} is a mafia ${level}!`
 console.log(str)
