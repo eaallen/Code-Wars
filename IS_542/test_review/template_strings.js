@@ -12,6 +12,5 @@ const tag = function (strings, name, level) {
 }
 let _name = 'eli'
 let level = Math.floor(Math.random()*11)
-console.log
 let str = tag `${_name} is a mafia ${level}!`
 console.log(str)
