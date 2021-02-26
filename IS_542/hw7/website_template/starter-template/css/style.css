@@ -1,0 +1,41 @@
+/* Custom Stylesheet */
+
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+* {
+  /* So 100% means 100% */
+  box-sizing: border-box;
+}
+
+html, body {
+  /* Make the body to be as tall as browser window */
+  height: 100%;
+}
+
+.icon-block {
+  padding: 0 15px;
+}
+
+.icon-block .material-icons {
+  font-size: inherit;
+}
+
+/* MESSAGES */
+
+.message {
+  background: #ff9800;
+  height: 5rem;
+  border-bottom: 1px solid gray;
+}
+
+.content {
+  /* Subtract the header size */
+  /* max-height: calc(100% - 64px); */
+  height: 300rem;
+  overflow: auto;
+}
