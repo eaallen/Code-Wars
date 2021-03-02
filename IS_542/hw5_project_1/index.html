@@ -17,6 +17,9 @@
     <script src="./js/ui.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/HTMLHelper.js"></script>
+    <!-- jQuery UI -->
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
     <!-- <script src="./js/scriptures.js"></script> -->
 </head>
 
@@ -65,10 +68,13 @@
                 mapTypeId: 'terrain'
             });
         }
+
+
+
     </script>
     <script type="module">
         import scriptures from './js/scriptures.js'
-        
+
         function ready(fn) {
             if (document.readyState != 'loading') {
                 fn();
@@ -103,6 +109,35 @@
 
     <!-- MarkerWithLabel, allows me to give markers lables: https://github.com/googlemaps/js-markerwithlabel -->
     <script src="https://unpkg.com/@googlemaps/markerwithlabel/dist/index.min.js"></script>
+
+
+
+    <script>
+
+        $('#prev_btn').click(function () {
+
+            if ($('.scripturecontent').is(':hidden')) {
+
+                $('.scripturecontent').show('slide', { direction: 'right' }, 1000);
+            } else {
+
+                $('.scripturecontent').hide('slide', { direction: 'right' }, 1000);
+            }
+        });
+
+
+        $('#loginPanel2').click(function () {
+
+            if ($('.scripturecontent').is(':hidden')) {
+
+                $('.scripturecontent').show('slide', { direction: 'left' }, 1000);
+            } else {
+
+                $('.scripturecontent').hide('slide', { direction: 'right' }, 1000);
+            }
+        });
+
+    </script>
 </body>
 
 </html>

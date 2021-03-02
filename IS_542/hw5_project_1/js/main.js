@@ -1,7 +1,6 @@
 // testing for fetch
 async function getData(url){
     const data = await fetch(url).then(success=>success.text()).catch(err=>console.error(err))
-    console.log(data)
 }
 // getData()
 let a = `https://scriptures.byu.edu/mapscrip/mapgetscrip.php?book=${1}&chap=${101}&verses=${''}` // bad HTTP request

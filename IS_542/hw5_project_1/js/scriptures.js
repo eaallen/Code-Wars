@@ -226,7 +226,7 @@ const centerMapMarkers = function (map_markers_array) {
     if (map_markers_array.length > 0) {
         let bounds = new google.maps.LatLngBounds();
         for (const marker of map_markers_array) {
-            loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+            let loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
             bounds.extend(loc);
         }
         map.fitBounds(bounds);
@@ -383,7 +383,7 @@ const getScripturesCallback = function (html, book_id, chapter_id) {
         `0:${prev_book_id}:${prev_chapter_value}`,
         'Back'
     ) : back_to_volumes} </div>
-            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${next_book_id ? HTML.hashLink(
+            <div id="next_btn" class="chapter-nav-btn" title="${next_title}" onClick="click()">  ${next_book_id ? HTML.hashLink(
         `0:${next_book_id}:${next_chapter_value}`,
         'Next'
     ) : back_to_volumes} </div> 
@@ -600,7 +600,7 @@ async function getData(url, is_html = false) {
         ? success.text()
         : success.json())
         .catch(err => console.error(err))
-    console.log('data from ' + url, data)
+    // console.log('data from ' + url, data)
     return data
 }
 
@@ -614,6 +614,21 @@ const Scriptures = {
     init,
     onHashChange,
     showLocation,
+}
+
+function click() {
+    console.log('...')
+    $('#next_btn').click(function () {
+        console.log('cick')
+        if ($('.scripturecontent').is(':hidden')) {
+
+            $('.scripturecontent').show('slide', { direction: 'left' }, 1000);
+        } else {
+
+            $('.scripturecontent').hide('slide', { direction: 'left' }, 1000);
+        }
+    });
+
 }
 
 export default Object.freeze(Scriptures)
