@@ -1,124 +1,154 @@
-html, body {
-    height: 100%;
+html,
+body {
+  height: 100%;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 body {
-    font-family: Arial;
-    margin: 0;
+  font-family: Arial;
+  margin: 0;
 }
 
 #content {
-    height: 100%;
-    width: 100%;
-    border-collapse: collapse;
+  height: 100%;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 #header {
-    text-align: center;
-    background: #01447e;
-    height: 4rem;
-    color: #fff;
+  text-align: center;
+  background: #01447e;
+  height: 4rem;
+  color: #fff;
 }
 
 #map {
-    background-color: antiquewhite;
+  background-color: antiquewhite;
 }
 
 #scripture_viewer {
-    background-color: #d3d2d2;
-    /* padding: 2rem; */
-    padding-left: .5rem;
-    padding-right: .5rem;
-    max-height: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
+  background-color: #d3d2d2;
+  max-height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 #scripnav {
-    background-color: #d3d2d2;
+  background-color: #d3d2d2;
 }
 
-#subtitle {}
+#subtitle {
+}
 
 #text {
-    overflow-y: scroll;
-    max-height: 40rem;
+  overflow-y: scroll;
+  max-height: 40rem;
 }
 
 #title {
-    font-size: 2rem;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bolder;
+  font-size: 2rem;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bolder;
 }
 
 #breadcrumb_chapter {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 #breadcrumb_book {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 .books {
-    
 }
 
 .test-flex {
-    flex: 3;
+  flex: 3;
 }
 
 .btn {
-    background-color: #eee;
-    margin: 5px;
-    padding: 5px;
-    text-align: center;
-    max-width: 6rem;
-    color: #01447e;
+  background-color: #eee;
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+  max-width: 6rem;
+  color: #01447e;
 }
 
 .btn-link {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .row {
-    display: flex;
+  display: flex;
 }
 
 .column {
-    flex: 50%;
+  flex: 50%;
 }
 
 .col-75 {
-    flex: 75%;
+  flex: 75%;
 }
 
 .col-25 {
-    flex: 25%;
+  flex: 25%;
 }
 
 .shadow {
-    -moz-box-shadow: inset 0 0 10px #000000;
-    -webkit-box-shadow: inset 0 0 10px #000000;
-    box-shadow: inset 0 0 10px #000000;
+  -moz-box-shadow: inset 0 0 10px #000000;
+  -webkit-box-shadow: inset 0 0 10px #000000;
+  box-shadow: inset 0 0 10px #000000;
 }
 
-.scripturecontent{
-    padding: .5rem;
-    background-color: #fff;
-    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+.scripturecontent {
+  padding: 0.5rem;
+  background-color: #fff;
+  /* transition: cubic-bezier(0.075, 0.82, 0.165, 1); */
+  /* height: inherit; */
+  /* width: inherit; */
+  /* left:0; */
+}
+.scripturewrapper {
+  /* position: relative; */
+}
+#scriptures {
+  /* display: inline; */
+}
+.slide-container{
+    position: relative;
+    display: flex;
+    width: 300%;
+    right:100%;
+    align-items: center;
+}
+#current_view {
+  /* position: relative; */
+}
+#next_view {
+  /* position: relative; */
+}
+#prev_view {
+  right: 100%;
+  bottom: 100%;
+  /* position: relative; */
+}
+.slide {
+  height: 100px;
+  width: 100px;
+  position: absolute;
 }
 
 .labels {
-    color: #ffffff;
-    font-weight: bolder;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 1rem;
-    background-color: #00000057;
-    padding: 3px;
+  color: #ffffff;
+  font-weight: bolder;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1rem;
+  background-color: #00000057;
+  padding: 3px;
 }
 
 /* The Accordian styles are from w3Schools.com */
@@ -126,39 +156,41 @@ body {
 /* Style the buttons that are used to open and close the accordion panel */
 
 .accordion {
-    background-color: #01447e;
-    color: #fff;
-    cursor: pointer;
-    padding: 1rem;
-    text-align: left;
-    border: none;
-    outline: none;
-    transition: 0.3s;
+  background-color: #01447e;
+  color: #fff;
+  cursor: pointer;
+  padding: 1rem;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.3s;
+  width:100%;
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 
-.active, .accordion:hover {
-    background-color: #0368c0;
-    /*color: #fff; */
-    /* box-shadow: 5px 10px #888888; */
+.active,
+.accordion:hover {
+  background-color: #0368c0;
+  /*color: #fff; */
+  /* box-shadow: 5px 10px #888888; */
 }
 
 /* Style the accordion panel. Note: hidden by default */
 
 .panel-for-accordian {
-    padding: 0 18px;
-    background-color: #ffffffd3;
-    display: none;
-    overflow: hidden;
+  padding: 0 18px;
+  background-color: #ffffffd3;
+  display: none;
+  overflow: hidden;
 }
 
-.versesblock ul{
-    padding-inline-start: 20px !important;
+.versesblock ul {
+  padding-inline-start: 20px !important;
 }
 
 .versesblock li {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 /* BREADCRUMB (w3Schools.com)*/
@@ -166,66 +198,67 @@ body {
 /* Style the list */
 
 ul.breadcrumb {
-    padding: 10px 16px;
-    list-style: none;
-    background-color: #eee;
+  padding: 10px 16px;
+  list-style: none;
+  background-color: #eee;
 }
 
 /* Display list items side by side */
 
 ul.breadcrumb li {
-    display: inline;
-    font-size: 18px;
+  display: inline;
+  font-size: 18px;
 }
 
 /* Add a slash symbol (/) before/behind each list item */
 
-ul.breadcrumb li+li:before {
-    padding: 8px;
-    color: black;
-    content: "/\00a0";
+ul.breadcrumb li + li:before {
+  padding: 8px;
+  color: black;
+  content: "/\00a0";
 }
 
 /* Add a color to all links inside the list */
 
 ul.breadcrumb li a {
-    color: #0275d8;
-    text-decoration: none;
+  color: #0275d8;
+  text-decoration: none;
 }
 
 /* Add a color on mouse-over */
 
 ul.breadcrumb li a:hover {
-    color: #01447e;
-    text-decoration: underline;
+  color: #01447e;
+  text-decoration: underline;
 }
 
 .chapter-nav {
-    vertical-align: middle;
-    text-align: right;
-    margin-bottom: 1rem;
+  vertical-align: middle;
+  text-align: right;
+  margin-bottom: 1rem;
+  padding-right: 1rem;
 }
 
 .chapter-nav-btn {
-    display: inline;
+  display: inline;
 }
 
 #prev_btn {
-    margin-right: 2rem;
+  margin-right: 2rem;
 }
 
 #outer {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
 }
 
 #inner_fixed {
-    height: 100px;
-    background-color: grey;
+  height: 100px;
+  background-color: grey;
 }
 
 #inner_remaining {
-    background-color: #DDDDDD;
-    flex-grow: 1;
+  background-color: #dddddd;
+  flex-grow: 1;
 }

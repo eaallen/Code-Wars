@@ -39,7 +39,10 @@ const CLASS_PANEL_FOR_ACCORDIAN = 'panel-for-accordian'
 const CLASS_MAP_LABELS = 'labels'
 
 const DIV_SCRIPTURE_NAVIGATOR = 'scripnav'
-const DIV_SCRIPTURES = 'scriptures'
+const DIV_CHAPTER_NAV = 'navigator'
+const DIV_SCRIPTURES = 'current_view'
+const DIV_NEXT_VIEW = 'next_view'
+const DIV_PREV_VIEW = 'prev_view'
 const TAG_HEADER_5 = 'h5'
 
 const REQUEST_GET = "GET"
@@ -315,8 +318,7 @@ const uniqueMarkers = function (alt) {
 // ---------------------------------- Navigation Hanlers ------------------------------
 // Navigates to the Home View
 const navigateHome = function (volume_id) {
-
-    document.getElementById(DIV_SCRIPTURES).innerHTML = HTML.div({
+    document.getElementById('vol_book_nav').innerHTML = HTML.div({
         id: DIV_SCRIPTURE_NAVIGATOR,
         content: volumesGridContent()
     })
@@ -333,6 +335,9 @@ const navigateHome = function (volume_id) {
     // bread crumb
     document.getElementById('breadcrumb_book').style.visibility = 'hidden'
     document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
+    
+    document.getElementById('scriptures').style.display = 'none'
+    document.getElementById('vol_book_nav').style.display = 'block'
 }
 
 // navigate to the books contents, display book name in breadcrumb 
@@ -350,11 +355,15 @@ const navigateBook = function (book_id) {
     if (book.numChapters <= 1) {
         navigateChapter(book_id, book.numChapters)
     } else {
-        document.getElementById(DIV_SCRIPTURES).innerHTML = HTML.div({
+        document.getElementById('vol_book_nav').innerHTML = HTML.div({
             id: DIV_SCRIPTURE_NAVIGATOR,
             content: chaptersGrid(book)
         })
     }
+
+    document.getElementById('scriptures').style.display = 'none'
+    document.getElementById('vol_book_nav').style.display = 'block'
+
 }
 
 // fetch call to get chapter data, see getScripturesCallback for 
@@ -363,11 +372,14 @@ const navigateChapter = async function (book_id, chapter_id) {
     const encoded = encodedScripturesUrlParams(book_id, chapter_id)
     const html = await getData(encoded, true)
     getScripturesCallback(html, book_id, chapter_id)
+
+    document.getElementById('vol_book_nav').style.display = 'none'
+    document.getElementById('scriptures').style.display = 'block'
 }
 
 // handles date recieved from the server:
 // Renders: chapter contents, next / back links, and breadcrumb 
-const getScripturesCallback = function (html, book_id, chapter_id) {
+const getScripturesCallback = async function (html, book_id, chapter_id) {
     // getting next and previous chapters
     const [next_book_id, next_chapter_value, next_title] = nextChapter(book_id, chapter_id) ||
         [false, false, false]
@@ -377,23 +389,38 @@ const getScripturesCallback = function (html, book_id, chapter_id) {
     // display the "next" & "back" elements, if there are no more 
     // chapters in the volume then go back to the volumes list
     const back_to_volumes = HTML.hashLink('0', 'Volumes')
-    document.getElementById(DIV_SCRIPTURES).innerHTML = `
+    document.getElementById(DIV_CHAPTER_NAV).innerHTML = `
         <div class="chapter-nav">
             <div id="prev_btn" class="chapter-nav-btn" title="${prev_title}"> ${prev_book_id ? HTML.hashLink(
         `0:${prev_book_id}:${prev_chapter_value}`,
         'Back'
     ) : back_to_volumes} </div>
-            <div id="next_btn" class="chapter-nav-btn" title="${next_title}" onClick="click()">  ${next_book_id ? HTML.hashLink(
+            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${next_book_id ? HTML.hashLink(
         `0:${next_book_id}:${next_chapter_value}`,
         'Next'
     ) : back_to_volumes} </div> 
-        </div>${html}`
+        </div>`
+    document.getElementById(DIV_SCRIPTURES).innerHTML = html
+    document.getElementById(DIV_NEXT_VIEW).innerHTML = html
+    document.getElementById(DIV_PREV_VIEW).innerHTML = html
 
-    // display the makers on the map
-    setUpMarkers()
+    const afterAnimate = () => {
+        $('.slide-container').removeAttr("style")
+        // display the makers on the map
+        setUpMarkers()
+        // fit all of the markers in the map's view
+        centerMapMarkers(state.gmap_markers)
+    }
+    const timeout = ()=>setTimeout(afterAnimate,500)
 
-    // fit all of the markers in the map's view
-    centerMapMarkers(state.gmap_markers)
+    document.getElementById('next_btn').addEventListener('click', () => {
+        console.log('NEXT')
+        $(".slide-container").animate({ right: '200%' }, 250, timeout);
+    })
+    document.getElementById('prev_btn').addEventListener('click', () => {
+        $(".slide-container").animate({ right: '0' }, 250, timeout);
+
+    })
 
     // set up breadcrumb
     document.getElementById('breadcrumb_book').style.visibility = 'visible'

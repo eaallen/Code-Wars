@@ -21,6 +21,17 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
     <!-- <script src="./js/scriptures.js"></script> -->
+    <script>
+        let tog = true
+        $(document).ready(function () {
+            $("#next_btn").click(function () {
+                console.log('tog->', tog)
+                // $(".slide-1").animate({ left: tog ? '100px' : '0px' });
+                // $(".slide-2").animate({ left: tog ? '0px' : '-100px' });
+                tog = !tog
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -42,9 +53,16 @@
                         <li><a id="breadcrumb_book" href="#"></a></li>
                         <li id="breadcrumb_chapter"></li>
                     </ul>
-                    <div id="navigator"></div>
+                    <div id="vol_book_nav"></div>
                     <!-- volumes grid -->
-                    <div id="scriptures"></div>
+                    <div id="scriptures">
+                        <div id="navigator"></div>
+                        <div class="slide-container">
+                            <div id="prev_view"></div>
+                            <div id="current_view"></div>
+                            <div id="next_view"></div>
+                        </div>
+                    </div>
                     <!-- for each volume repeat the following -->
 
                     <div id="text">
