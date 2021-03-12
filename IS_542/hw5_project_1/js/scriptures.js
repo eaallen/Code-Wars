@@ -618,20 +618,22 @@ const openAnimation = (callback) => {
         $('#close').animate({ right: '8px' }, ANIMATION_SPEED)
         $('#map').animate({ left: '25%' }, ANIMATION_SPEED)
         $('#scripture_viewer').animate({ right: '0%' }, ANIMATION_SPEED,
-            () => typeof callback === 'function' ? callback() : null
-        )
+            () => {
+                typeof callback === 'function' ? callback() : null
+                UI.dynamicSizingOfHolder_1()
+            })
     }, ['#close', '#map', '#scripture_viewer'])
-    UI.dynamicSizingOfHolder_1()
 }
 const closeAnimation = (callback) => {
     resetAnimation(() => {
         $('#close').animate({ right: '100%' }, ANIMATION_SPEED)
         $('#map').animate({ left: '0' }, ANIMATION_SPEED)
         $('#scripture_viewer').animate({ right: '100%' }, ANIMATION_SPEED,
-            () => typeof callback === 'function' ? callback() : null
-        )
+            () => {
+                typeof callback === 'function' ? callback() : null
+                UI.dynamicSizingOfHolder_1()
+            })
     }, ['#close', '#map', '#scripture_viewer'])
-    UI.dynamicSizingOfHolder_1()
 }
 
 const resetAnimation = (callback, arr_query_selectors) => {
