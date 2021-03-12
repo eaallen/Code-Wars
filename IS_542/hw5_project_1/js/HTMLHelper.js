@@ -54,10 +54,13 @@ class HTMLHelper {
     }
 
     static hashLink(hash_args, content) {
-        // onclick="window.location.hash = '#${hash_args}'"
         return `<a href="#${hash_args}" >
         ${content}
         </a>`
+    }
+
+    static createOnClickById(node_id, callback){
+        document.getElementById(node_id).addEventListener('click',callback)
     }
 
 }

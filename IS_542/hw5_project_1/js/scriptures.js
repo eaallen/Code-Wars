@@ -26,11 +26,14 @@
  * 
  ===============================================================================*/
 
-
-
 // ------------------------------------- Constants -----------------------------------
 const CLASS_BOOKS = 'books'
 const CLASS_BUTTON = 'btn'
+const CLASS_ACCORDIAN_GRID = 'accordian-grid'
+const CLASS_FILLER = 'filler'
+const CLASS_GRID = 'grid'
+const CLASS_GRID_ITEM = 'grid-item'
+const CLASS_DISPLAY = 'display'
 const CLASS_BUTTON_LINK = 'btn-link'
 const CLASS_CHAPTER = 'chapter'
 const CLASS_VOLUMES = 'volume'
@@ -38,7 +41,7 @@ const CLASS_ACCORDIAN = 'accordion'
 const CLASS_PANEL_FOR_ACCORDIAN = 'panel-for-accordian'
 const CLASS_MAP_LABELS = 'labels'
 
-const DIV_SCRIPTURE_NAVIGATOR = 'scripnav'
+const DIV_SCRIPTURE_NAVIGATOR = 'current_view'
 const DIV_CHAPTER_NAV = 'navigator'
 const DIV_SCRIPTURES = 'current_view'
 const DIV_NEXT_VIEW = 'next_view'
@@ -61,13 +64,19 @@ const GEO_LOCATION_INDEX_LATITUDE = 3
 const GEO_LOCATION_INDEX_LONGITUDE = 4
 const GEO_LOCATION_INDEX_PLACE_NAME = 2
 
+const ANIMATION_SPEED = 300
+
 //--------------------------------------- Variables -----------------------------------
 
 // using state to keep track of these varaibles in this module
 const state = {
     books: null, // will be turned into an array
     volumes: null, // will be turned into an array
-    gmap_markers: []
+    gmap_markers: [],
+    animation_direction: null,
+    prev_html: '',
+    next_html: '',
+    in_animation: true,
 }
 
 // ==================================== Functions ======================================
@@ -78,7 +87,7 @@ const HTML = HTMLHelper // addess: ./HTMLHelper.js
 // generates a grid for the books 
 const booksGrid = function (volume) {
     return HTML.div({
-        class_name: `${CLASS_BOOKS} ${CLASS_PANEL_FOR_ACCORDIAN}`,
+        class_name: `${CLASS_BOOKS} ${CLASS_PANEL_FOR_ACCORDIAN} ${CLASS_ACCORDIAN_GRID}`,
         content: booksGridContent(volume)
     })
 }
@@ -92,7 +101,7 @@ const booksGridContent = function (volume) {
             id: '',
             href: `#${volume.id}:${book.id}`,
             content: HTML.div({
-                class_name: CLASS_BUTTON,
+                class_name: `${CLASS_BUTTON} ${CLASS_GRID_ITEM}`,
                 id: book.id,
                 content: book.gridName
             })
@@ -112,8 +121,12 @@ const volumesGridContent = function (volume_id) {
             })
             grid_content += booksGrid(volume)
         }
-    }
-    )
+    })
+    grid_content += HTML.div({
+        class_name: `${CLASS_FILLER}`,
+        content: ''
+    })
+
 
     return grid_content
 }
@@ -122,10 +135,10 @@ const volumesGridContent = function (volume_id) {
 // generates a grid for the chapters of a book 
 const chaptersGrid = function (book) {
     return HTML.div({
-        class_name: CLASS_VOLUMES,
+        class_name: `${CLASS_VOLUMES} ${CLASS_DISPLAY}`,
         content: HTML.element(TAG_HEADER_5, book.fullName)
     }) + HTML.div({
-        class_name: CLASS_BOOKS,
+        class_name: `${CLASS_BOOKS} ${CLASS_GRID}`,
         content: chaptersGriContent(book)
     })
 }
@@ -138,11 +151,11 @@ const chaptersGriContent = function (book) {
     // loops for all chapters in book
     while (chapter <= book.numChapters) {
         grid_content += HTML.link({
-            class_name: CLASS_CHAPTER,
+            class_name: `${CLASS_CHAPTER}`,
             id: chapter.toString() + '_chapter_id',
             href: `#0:${book.id}:${chapter}`,
             content: HTML.div({
-                class_name: CLASS_BUTTON,
+                class_name: `${CLASS_BUTTON} ${CLASS_GRID_ITEM}`,
                 content: chapter
             })
         })
@@ -200,6 +213,7 @@ const onHashChange = function () {
             return
         }
     }
+
 }
 
 
@@ -245,6 +259,8 @@ const centerMapMarkers = function (map_markers_array) {
 const clearMarkers = function () {
     for (let i = 0; i < state.gmap_markers.length; i++) {
         state.gmap_markers[i].setMap(null)
+        state.gmap_markers[i].visible = false
+        console.log('markers', state.gmap_markers[i])
     }
     state.gmap_markers = []
 }
@@ -256,7 +272,7 @@ const setUpMarkers = function () {
     }
     // add a marker for each link that calles the "showLocation" method in the chapter contents
     let matches
-    document.querySelectorAll("a[onclick^=\"showLocation(\"]").forEach(element => {
+    document.querySelectorAll("#current_view a[onclick^=\"showLocation(\"]").forEach(element => {
         matches = GEO_LOCATION_REGEX.exec(element.getAttribute('onclick'))
 
         if (matches) {
@@ -318,63 +334,75 @@ const uniqueMarkers = function (alt) {
 // ---------------------------------- Navigation Hanlers ------------------------------
 // Navigates to the Home View
 const navigateHome = function (volume_id) {
-    document.getElementById('vol_book_nav').innerHTML = HTML.div({
-        id: DIV_SCRIPTURE_NAVIGATOR,
-        content: volumesGridContent()
+    state.animation_direction = null
+    animateNavigation(() => {
+        document.getElementById(DIV_SCRIPTURE_NAVIGATOR).innerHTML = HTML.div({
+            id:'holder_1',
+            content: volumesGridContent()
+        })
+        UI.accordian(CLASS_ACCORDIAN)
+        UI.dynamicSizingOfHolder_1()
+
+        // show accordian section as active if it matches the volume ID
+        if (volume_id) {
+            let acc = document.getElementsByClassName(CLASS_ACCORDIAN);
+            acc[volume_id - 1].classList.add('active')
+            acc[volume_id - 1].nextElementSibling.style.display = "block";
+        }
+
+        // bread crumb
+        document.getElementById('breadcrumb_book').style.visibility = 'hidden'
+        document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
+
+        // document.getElementById('vol_book_nav').style.display = 'block'
     })
+    $('#navigator').animate({ opacity: 0 }, ANIMATION_SPEED)
 
-    UI.accordian(CLASS_ACCORDIAN)
-
-    // show accordian section as active if it matches the volume ID
-    if (volume_id) {
-        let acc = document.getElementsByClassName(CLASS_ACCORDIAN);
-        acc[volume_id - 1].classList.add('active')
-        acc[volume_id - 1].nextElementSibling.style.display = "block";
-    }
-
-    // bread crumb
-    document.getElementById('breadcrumb_book').style.visibility = 'hidden'
-    document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
-    
-    document.getElementById('scriptures').style.display = 'none'
-    document.getElementById('vol_book_nav').style.display = 'block'
 }
 
 // navigate to the books contents, display book name in breadcrumb 
 const navigateBook = function (book_id) {
-    let book = state.books[book_id];
+    state.animation_direction = null
+    animateNavigation(() => {
+        let book = state.books[book_id];
 
-    // handleing breadcrum
-    document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
-    document.getElementById('breadcrumb_book').style.visibility = 'visible'
-    document.getElementById('breadcrumb_book').innerHTML = HTML.hashLink(
-        `0:${book_id}`,
-        `${book.citeFull}`
-    )
+        // handleing breadcrum
+        document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
+        document.getElementById('breadcrumb_book').style.visibility = 'visible'
+        document.getElementById('breadcrumb_book').innerHTML = HTML.hashLink(
+            `0:${book_id}`,
+            `${book.citeFull}`
+        )
 
-    if (book.numChapters <= 1) {
-        navigateChapter(book_id, book.numChapters)
-    } else {
-        document.getElementById('vol_book_nav').innerHTML = HTML.div({
-            id: DIV_SCRIPTURE_NAVIGATOR,
-            content: chaptersGrid(book)
-        })
-    }
+        if (book.numChapters <= 1) {
+            navigateChapter(book_id, book.numChapters)
+        } else {
+            document.getElementById(DIV_SCRIPTURE_NAVIGATOR).innerHTML = HTML.div({
+                content: chaptersGrid(book)
+            })
+        }
 
-    document.getElementById('scriptures').style.display = 'none'
-    document.getElementById('vol_book_nav').style.display = 'block'
-
+    })
+    $('#navigator').animate({ opacity: 0 }, ANIMATION_SPEED)
 }
+
 
 // fetch call to get chapter data, see getScripturesCallback for 
 // how this data is processed
-const navigateChapter = async function (book_id, chapter_id) {
-    const encoded = encodedScripturesUrlParams(book_id, chapter_id)
-    const html = await getData(encoded, true)
+const navigateChapter = async (book_id, chapter_id) => {
+    const html = await genHtml(book_id, chapter_id)
     getScripturesCallback(html, book_id, chapter_id)
 
-    document.getElementById('vol_book_nav').style.display = 'none'
-    document.getElementById('scriptures').style.display = 'block'
+}
+
+const genHtml = async (book_id, chapter_id) => {
+    const encoded = encodedScripturesUrlParams(book_id, chapter_id)
+    return await getData(encoded, true)
+}
+
+const handleMarks = () => {
+    setUpMarkers()
+    centerMapMarkers(state.gmap_markers)
 }
 
 // handles date recieved from the server:
@@ -385,41 +413,62 @@ const getScripturesCallback = async function (html, book_id, chapter_id) {
         [false, false, false]
     const [prev_book_id, prev_chapter_value, prev_title] = prevChapter(book_id, chapter_id) ||
         [false, false, false]
+    state.prev_html = await genHtml(prev_book_id, prev_chapter_value)
+    state.next_html = await genHtml(next_book_id, next_chapter_value)
 
     // display the "next" & "back" elements, if there are no more 
     // chapters in the volume then go back to the volumes list
     const back_to_volumes = HTML.hashLink('0', 'Volumes')
     document.getElementById(DIV_CHAPTER_NAV).innerHTML = `
         <div class="chapter-nav">
-            <div id="prev_btn" class="chapter-nav-btn" title="${prev_title}"> ${prev_book_id ? HTML.hashLink(
-        `0:${prev_book_id}:${prev_chapter_value}`,
-        'Back'
-    ) : back_to_volumes} </div>
-            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${next_book_id ? HTML.hashLink(
-        `0:${next_book_id}:${next_chapter_value}`,
-        'Next'
-    ) : back_to_volumes} </div> 
+            <div id="prev_btn" class="chapter-nav-btn" title="${prev_title}"> ${prev_book_id
+            ? '<span class="material-icons cursor-pointer">skip_previous</span>' // HTML.hashLink(`0:${prev_book_id}:${prev_chapter_value}`, 'Back') 
+            : back_to_volumes} </div>
+            <div id="next_btn" class="chapter-nav-btn" title="${next_title}">  ${next_book_id
+            ? '<span class="material-icons cursor-pointer">skip_next</span>'
+            : back_to_volumes} </div> 
         </div>`
-    document.getElementById(DIV_SCRIPTURES).innerHTML = html
-    document.getElementById(DIV_NEXT_VIEW).innerHTML = html
-    document.getElementById(DIV_PREV_VIEW).innerHTML = html
 
-    const afterAnimate = () => {
-        $('.slide-container').removeAttr("style")
-        // display the makers on the map
-        setUpMarkers()
-        // fit all of the markers in the map's view
-        centerMapMarkers(state.gmap_markers)
+    if (state.animation_direction === 'from_left') {
+        // document.getElementById(DIV_PREV_VIEW).innerHTML = state.prev_html
+    } else if (state.animation_direction === 'from_right') {
+        // document.getElementById(DIV_NEXT_VIEW).innerHTML = state.next_html
+    } else {
+        animateNavigation(() => {
+            document.getElementById(DIV_SCRIPTURES).innerHTML = html
+            $('#navigator').animate({ opacity: 1 }, ANIMATION_SPEED, handleMarks)
+        })
     }
-    const timeout = ()=>setTimeout(afterAnimate,500)
 
-    document.getElementById('next_btn').addEventListener('click', () => {
-        console.log('NEXT')
-        $(".slide-container").animate({ right: '200%' }, 250, timeout);
+    const afterAnimate = (data, book_id, chapter_id) => {
+        $('.slide-container').removeAttr("style")
+        window.location.hash = `0:${book_id}:${chapter_id}`
+        document.getElementById(DIV_SCRIPTURES).innerHTML = data
+        setTimeout(() => {
+            handleMarks()
+        }, 200)
+    }
+
+    document.getElementById('next_btn').addEventListener('click', async () => {
+        state.animation_direction = 'from_right'
+        state.next_html = await genHtml(next_book_id, next_chapter_value)
+        document.getElementById(DIV_NEXT_VIEW).innerHTML = state.next_html
+
+        if (next_book_id && next_chapter_value) {
+            $(".slide-container").animate({ right: '200%' }, ANIMATION_SPEED, () =>
+                afterAnimate(state.next_html, next_book_id, next_chapter_value));
+        }
+
     })
-    document.getElementById('prev_btn').addEventListener('click', () => {
-        $(".slide-container").animate({ right: '0' }, 250, timeout);
+    document.getElementById('prev_btn').addEventListener('click', async () => {
+        state.animation_direction = 'from_left'
+        state.prev_html = await genHtml(prev_book_id, prev_chapter_value)
+        document.getElementById(DIV_PREV_VIEW).innerHTML = state.prev_html
 
+        if (prev_book_id && prev_chapter_value) {
+            $(".slide-container").animate({ right: '0' }, ANIMATION_SPEED, () =>
+                afterAnimate(state.prev_html, prev_book_id, prev_chapter_value));
+        }
     })
 
     // set up breadcrumb
@@ -551,6 +600,56 @@ const bookChapterValid = function (book_id, chapter) {
     return true
 }
 
+// ----------------------------- Animation ----------------------------------------
+const animateNavigation = (callback) => {
+    $(`#${DIV_SCRIPTURE_NAVIGATOR}`).animate({ opacity: 0 }, ANIMATION_SPEED, () => {
+        callback()
+        $(`#${DIV_SCRIPTURE_NAVIGATOR}`).animate({ opacity: 1 }, ANIMATION_SPEED)
+    })
+}
+const initOpenCloseAnimations = () => {
+    document.getElementById('close').addEventListener('click', closeAnimation)
+    document.getElementById('open').addEventListener('click', openAnimation)
+}
+const openAnimation = (callback) => {
+    resetAnimation(() => {
+        $('#close').animate({ right: '8px' }, ANIMATION_SPEED)
+        $('#map').animate({ left: '25%' }, ANIMATION_SPEED)
+        $('#scripture_viewer').animate({ right: '0%' }, ANIMATION_SPEED,
+            () => typeof callback === 'function' ? callback() : null
+        )
+    }, ['#close', '#map', '#scripture_viewer'])
+    UI.dynamicSizingOfHolder_1()
+}
+const closeAnimation = (callback) => {
+    resetAnimation(() => {
+        $('#close').animate({ right: '100%' }, ANIMATION_SPEED)
+        $('#map').animate({ left: '0' }, ANIMATION_SPEED)
+        $('#scripture_viewer').animate({ right: '100%' }, ANIMATION_SPEED,
+            () => typeof callback === 'function' ? callback() : null
+        )
+    }, ['#close', '#map', '#scripture_viewer'])
+    UI.dynamicSizingOfHolder_1()
+}
+
+const resetAnimation = (callback, arr_query_selectors) => {
+    if (window.innerWidth < 770) {
+        callback()
+    } else {
+        $('#map').animate({ left: '35%' }, ANIMATION_SPEED)
+        $('#scripture_viewer').animate({ right: '65%' }, ANIMATION_SPEED,() =>{
+            for (const selector of arr_query_selectors) {
+                $(selector).removeAttr("style")
+            }
+        })
+
+    }
+}
+
+const closeAnimationPromise = () => new Promise((resolve) => {
+    closeAnimation(setTimeout(resolve, 500))
+})
+
 // ------------------------------- Other Rendering --------------------------------
 const titleForBookChapter = function (book, chapter_num) {
     if (book !== undefined) {
@@ -577,16 +676,18 @@ const showLocation = function (
     symbol,
 ) {
     // convert strings to numbers
-    const lat = Number(latitude)
-    const lng = Number(longitude)
-    const alt = Number(viewAltitude)
+    closeAnimationPromise().then(() => {
+        const lat = Number(latitude)
+        const lng = Number(longitude)
+        const alt = Number(viewAltitude)
 
-    const latLng = new google.maps.LatLng({ lat, lng })
+        const latLng = new google.maps.LatLng({ lat, lng })
 
-    zoomMapWithAltitude(alt)
+        zoomMapWithAltitude(alt)
 
-    // show the marker in the center of the map
-    map.setCenter(latLng)
+        // show the marker in the center of the map
+        map.setCenter(latLng)
+    })
 }
 
 const zoomMapWithAltitude = function (alt) {
@@ -627,7 +728,6 @@ async function getData(url, is_html = false) {
         ? success.text()
         : success.json())
         .catch(err => console.error(err))
-    // console.log('data from ' + url, data)
     return data
 }
 
@@ -635,27 +735,13 @@ const init = async function (callback) {
     state.books = await getData(URL_BOOKS)
     state.volumes = await getData(URL_VOLUMES)
     cacheBooks(callback)
+    initOpenCloseAnimations()
 }
 
 const Scriptures = {
     init,
     onHashChange,
     showLocation,
-}
-
-function click() {
-    console.log('...')
-    $('#next_btn').click(function () {
-        console.log('cick')
-        if ($('.scripturecontent').is(':hidden')) {
-
-            $('.scripturecontent').show('slide', { direction: 'left' }, 1000);
-        } else {
-
-            $('.scripturecontent').hide('slide', { direction: 'left' }, 1000);
-        }
-    });
-
 }
 
 export default Object.freeze(Scriptures)

@@ -10,6 +10,8 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
     <title>The Scriptures Mapped</title>
     <!-- Use Strict -->
     <script src="./strict.js"></script>
@@ -47,20 +49,36 @@
         </div>
         <div id="inner_remaining">
             <div id="content" class="row ">
+                <div id="map" class="col-75"></div>
+                <div id="open" class="center-items">
+                    <span class="material-icons">
+                        keyboard_arrow_right
+                    </span>
+                </div>
                 <div id="scripture_viewer" class="column col-25 ">
-                    <ul class="breadcrumb" id="nav_breadcrumb">
-                        <li><a id="breadcrumb_volume" href="#0">Volumes</a></li>
-                        <li><a id="breadcrumb_book" href="#"></a></li>
-                        <li id="breadcrumb_chapter"></li>
-                    </ul>
-                    <div id="vol_book_nav"></div>
-                    <!-- volumes grid -->
+                    <div id="controller">
+                        <ul class="breadcrumb inline" id="nav_breadcrumb">
+                            <li><a id="breadcrumb_volume" href="#0">Volumes</a></li>
+                            <li><a id="breadcrumb_book" href="#"></a></li>
+                            <li id="breadcrumb_chapter"></li>
+                        </ul>
+                    </div>
+                    <div id="close" class="center-items">
+                        <span class="material-icons">
+                            keyboard_arrow_left
+                        </span>
+                    </div>
+
+                    <div id="vol_book_nav">
+                        <div id="scripnav"></div>
+                    </div>
+
                     <div id="scriptures">
                         <div id="navigator"></div>
-                        <div class="slide-container">
-                            <div id="prev_view"></div>
-                            <div id="current_view"></div>
-                            <div id="next_view"></div>
+                        <div class="slide-container flex-container">
+                            <div id="prev_view" class="flex-item"></div>
+                            <div id="current_view" class="flex-item"></div>
+                            <div id="next_view" class="flex-item"></div>
                         </div>
                     </div>
                     <!-- for each volume repeat the following -->
@@ -69,7 +87,6 @@
 
                     </div>
                 </div>
-                <div id="map" class="col-75"></div>
             </div>
         </div>
     </div>
@@ -100,25 +117,21 @@
                 document.addEventListener('DOMContentLoaded', fn);
             }
         }
-
+        let globalResizeTimer
         ready(function () {
             scriptures.init(() => scriptures.onHashChange())
             showLocation = scriptures.showLocation
             window.addEventListener("hashchange", scriptures.onHashChange)
-
-            // seeting the max height for the scripture viewer
-            // this allows for dynamic overflow-scroll
-            const b = UI.getElementYDimesionById('map')
-            UI.setElementYDimesionsById('scripture_viewer', `${b}px`)
-
-            // set the max height with the onchange, this is currently a little buggy
-            window.addEventListener('resize', () => {
-                const size = UI.getElementYDimesionById('map')
-                UI.setElementYDimesionsById('scripture_viewer', `${size}px`)
-            })
-
+            $(window).resize(function () {
+                if (globalResizeTimer != null) window.clearTimeout(globalResizeTimer);
+                globalResizeTimer = window.setTimeout(function () {
+                    if(document.getElementById('holder_1')){
+                        UI.dynamicSizingOfHolder_1();
+                    }
+                }, 200);
+                
+            });
         })
-            // })
     </script>
 
     <script async
@@ -126,36 +139,9 @@
         </script>
 
     <!-- MarkerWithLabel, allows me to give markers lables: https://github.com/googlemaps/js-markerwithlabel -->
-    <script src="https://unpkg.com/@googlemaps/markerwithlabel/dist/index.min.js"></script>
+    <!-- <script src="https://unpkg.com/@googlemaps/markerwithlabel/dist/index.min.js"></script> -->
+    <script src="https://unpkg.com/@googlemaps/markerwithlabel@v1.1.0/dist/index.min.js"></script>
 
-
-
-    <script>
-
-        $('#prev_btn').click(function () {
-
-            if ($('.scripturecontent').is(':hidden')) {
-
-                $('.scripturecontent').show('slide', { direction: 'right' }, 1000);
-            } else {
-
-                $('.scripturecontent').hide('slide', { direction: 'right' }, 1000);
-            }
-        });
-
-
-        $('#loginPanel2').click(function () {
-
-            if ($('.scripturecontent').is(':hidden')) {
-
-                $('.scripturecontent').show('slide', { direction: 'left' }, 1000);
-            } else {
-
-                $('.scripturecontent').hide('slide', { direction: 'right' }, 1000);
-            }
-        });
-
-    </script>
 </body>
 
 </html>

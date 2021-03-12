@@ -1,0 +1,81 @@
+<!-- saved from url=(0105)https://learningsuite.byu.edu/plugins/Upload/fileDownload.php?fileId=ef3ad881-mBmQ-YWmO-BIJf-bRbd6fbc3888 -->
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <!-- <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" /> -->
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <form>
+            <h2>
+                Initiate Pipeline Run
+            </h2>
+
+            <br>
+            <div class="input-field col s12">
+                <select id="bookId">
+                    <option value="" disabled selected>Choose a book</option>
+                    <option value="0">&lt;none&gt;</option>
+                    <option value="1">Kilbarchan Parish Record</option>
+                    <option value="2">The Ely Ancestry</option>
+                </select>
+                <label for="bookId">Book</label>
+            </div>
+            <div class="row">
+                <!-- Page Range -->
+                <div class="input-field col s5">
+                    <input type="text" name="startPage" size="5" value="1">
+                </div>
+                <div class="input-field col s2">
+                    -
+                </div>
+                <div class="input-field col s5">
+                    <!-- NEEDSWORK: find the endPage value in the database -->
+                    <input type="text" name="endPage" size="5" value="100">
+                </div>
+
+            </div>
+            <div class="input-field col s12">
+                Tools
+                <input type="checkbox" id="tool1" name="tools" value="frontier" checked="checked"> FROntIER
+                <input type="checkbox" id="tool2" name="tools" value="greendda"> GreenDDA
+                <input type="checkbox" id="tool3" name="tools" value="greenfie"> GreenFIE
+                <input type="checkbox" id="tool4" name="tools" value="listreader"> ListReader
+                <input type="checkbox" id="tool5" name="tools" value="ontoes"> OntoES
+                <input type="checkbox" id="tool6" name="tools" value="ontosoar"> OntoSoar
+            </div>
+            <div class="input-field col s12">
+                Run Type
+                <input type="radio" name="runtype" checked="checked"> with COMET
+                <input type="radio" name="runtype"> without COMET
+            </div>
+            <input type="button" id="initiateRun" value="Run">
+        </form>
+        <a href="https://learningsuite.byu.edu/plugins/Upload/home.php">Back</a>
+
+    </div>
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems, {});
+        });
+    </script>
+</body>
+
+</html>
