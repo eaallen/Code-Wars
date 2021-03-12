@@ -384,6 +384,7 @@ const navigateBook = function (book_id) {
 
     })
     $('#navigator').animate({ opacity: 0 }, ANIMATION_SPEED)
+    // document.getElementById('').s
 }
 
 
@@ -444,6 +445,10 @@ const getScripturesCallback = async function (html, book_id, chapter_id) {
         $('.slide-container').removeAttr("style")
         window.location.hash = `0:${book_id}:${chapter_id}`
         document.getElementById(DIV_SCRIPTURES).innerHTML = data
+        state.next_html = ''
+        state.prev_html = ''
+        document.getElementById(DIV_NEXT_VIEW).innerHTML = state.next_html
+        document.getElementById(DIV_PREV_VIEW).innerHTML = state.prev_html
         setTimeout(() => {
             handleMarks()
         }, 200)
