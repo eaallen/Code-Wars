@@ -337,7 +337,7 @@ const navigateHome = function (volume_id) {
     state.animation_direction = null
     animateNavigation(() => {
         document.getElementById(DIV_SCRIPTURE_NAVIGATOR).innerHTML = HTML.div({
-            id:'holder_1',
+            id: 'holder_1',
             content: volumesGridContent()
         })
         UI.accordian(CLASS_ACCORDIAN)
@@ -363,9 +363,12 @@ const navigateHome = function (volume_id) {
 // navigate to the books contents, display book name in breadcrumb 
 const navigateBook = function (book_id) {
     state.animation_direction = null
+    let book = state.books[book_id];
+    if (book.numChapters <= 1) {
+        navigateChapter(book_id, book.numChapters)
+        return
+    }
     animateNavigation(() => {
-        let book = state.books[book_id];
-
         // handleing breadcrum
         document.getElementById('breadcrumb_chapter').style.visibility = 'hidden'
         document.getElementById('breadcrumb_book').style.visibility = 'visible'
@@ -373,18 +376,12 @@ const navigateBook = function (book_id) {
             `0:${book_id}`,
             `${book.citeFull}`
         )
-
-        if (book.numChapters <= 1) {
-            navigateChapter(book_id, book.numChapters)
-        } else {
-            document.getElementById(DIV_SCRIPTURE_NAVIGATOR).innerHTML = HTML.div({
-                content: chaptersGrid(book)
-            })
-        }
-
+        document.getElementById(DIV_SCRIPTURE_NAVIGATOR).innerHTML = HTML.div({
+            content: chaptersGrid(book)
+        })
     })
     $('#navigator').animate({ opacity: 0 }, ANIMATION_SPEED)
-    // document.getElementById('').s
+    return
 }
 
 
@@ -642,7 +639,7 @@ const resetAnimation = (callback, arr_query_selectors) => {
         callback()
     } else {
         $('#map').animate({ left: '35%' }, ANIMATION_SPEED)
-        $('#scripture_viewer').animate({ right: '65%' }, ANIMATION_SPEED,() =>{
+        $('#scripture_viewer').animate({ right: '65%' }, ANIMATION_SPEED, () => {
             for (const selector of arr_query_selectors) {
                 $(selector).removeAttr("style")
             }
