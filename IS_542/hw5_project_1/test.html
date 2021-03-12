@@ -14,7 +14,7 @@
             --w: 100px;
             width: 100px;
             height: 100px;
-            overflow: hidden;
+            /* overflow: hidden; */
 
             background-color: antiquewhite;
             /* display: inline; */
@@ -37,30 +37,72 @@
 
         .cont {
             display: flex;
-            width: 300%;;
+            width: 300%;
             position:relative;
             /* right: 100%; */
 
         }
 
         .fixed {
-            width: 100px;
-            height: 100px;
+            width: 300px;
+            height: 100%;
         }
 
         .flex-item {
             flex-grow: 1;
+        }
+        .cont-rel{
+            position:relative;
+            width: 500px;;
+            height: 500px;;
+            background-color: red;
+        }
+        .pos-1{
+            position:absolute;
+            left: 0;
+            top:0;
+            
+        }
+        .pos-2{
+
+        }
+        .container{
+            display: flex;
+            background-color: rebeccapurple;
+            width: 50%;
+        }
+        .item{
+            margin: 1rem 0px;
+            /* width: 30px; */
+            /* height: 100px; */
+            background-color: orange;
+            border-radius: 20px;
+            flex-grow: 1;
+        }
+        .item-size-2{
+            flex-grow: 2;
         }
     </style>
 </head>
 
 <body>
 
+    <div class="container">
+        <div class="item">a</div>
+        <div class="item">b</div>
+        <div class="item">c</div>
+    </div>
+    
+    
     <button>Start Animation</button>
 
     <p>By default, all HTML elements have a static position, and cannot be moved. To manipulate the position, remember
         to first set the CSS position property of the element to relative, fixed, or absolute!</p>
-    <div id="c">
+    
+    
+    
+    
+        <div id="c">
         <div class="cont">
             <div class="slide-1 fixed"></div>
             <div class="slide-2 fixed"></div>
@@ -72,7 +114,7 @@
         $(document).ready(function () {
             $("button").click(function () {
                 $(".cont").animate({ left: tog ? '-100px' : '0px' });
-                // $(".slide-2").animate({ left: tog ? '0px' : '-100px' });
+                $(".slide-2").animate({ left: tog ? '0px' : '-100px' });
                 tog = !tog
             });
         });
