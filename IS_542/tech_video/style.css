@@ -1,3 +1,46 @@
 .main{
-    padding-top: 20%;
+    padding-top: 200px;
+}
+body{
+    background-color: #2b1b45;
+    color: #fff
+}
+h1,h2,h3,h4,h5,h6{
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+.btn-1{
+    background-color: #7ff0f5;
+    width: 100%;
+    font-weight: 900;
+    color: #2b1b45;
+    text-transform: uppercase;
+}
+.btn-1:hover{
+    color: #2b1b45;
+    background-color: #fff;
+}
+.btn-1:focus{
+    color: #2b1b45;
+    background-color: #fff;
+}
+.form-lable{
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+input{
+    border-radius: 0;
+}
+
+.form-control{
+    color: #000;
+}
+.form-control:focus{
+    color:#000;
+    border-color: #fafafa !important;
+}
+.dark-bg{
+    color:#fff !important;
 }
