@@ -1,5 +1,5 @@
 # Functional Contact Form with Google App Script
-This is the code I used for a tutorial about using Google App Script and contact forms available at: <YOUTUBE LINK>.  
+This is the code I used for a tutorial about using Google App Script and contact forms available at: [https://youtu.be/INkY93oDXpg](https://youtu.be/INkY93oDXpg).  
 ## Technologies 
 The following technologies are used in the project:
 - Google App Script (serverless functions)
