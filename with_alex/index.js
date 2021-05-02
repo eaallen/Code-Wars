@@ -1,22 +1,22 @@
-
 let seconds = 120
 function countDown() {
   let min = Math.floor(seconds / 60)
   let rem = seconds % 60
-  const ms = seconds * 1000
   if (rem < 10) {
     rem = "0" + rem
   }
-  const ui = `${min}:${rem}`
 
   if (seconds > 0) {
+    const ui = `${min}:${rem}`
     write("count_down", ui)
-  }else{
+  } else {
     write("count_down", "BOOM!")
+    var audio = new Audio('s.mp3');
+    audio.play();
   }
 
   if (seconds >= 1) {
-    seconds = seconds -1
+    seconds = seconds - 1
     setTimeout(countDown, 1000)
   }
 }
