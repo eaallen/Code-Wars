@@ -1,4 +1,25 @@
 body{
   background-color: #000;
   color:#FFF;
+  margin-top: 2rem;
+}
+div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: larger;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  color: greenyellow;
+}
+#sean{
+  border-style: double;
+  border-color: greenyellow;
+  height: 255px;
+  border-width: 2rem;
+}
+h1{
+  margin-bottom: 10px;
+  margin-top: 10px;
+  text-align: center;
 }
